@@ -10,7 +10,7 @@ node[:deploy].each do |application, deploy|
   end
 
   execute "start remote_syslog" do
-    command "remote_syslog restart"
+    command "/usr/local/bin/remote_syslog restart"
     user "root"
   end
 end
