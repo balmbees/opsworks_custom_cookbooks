@@ -1,8 +1,0 @@
-files:
- - /srv/www/vingle/shared/log/<%= node[:remote_syslog][:environment] %>.log
- - /srv/www/vingle/shared/log/unicorn.stderr.log
- - /srv/www/vingle/shared/log/unicorn.stdout.log
-
-destination:
-  host: <%= node[:remote_syslog][:host] %>
-  port: <%= node[:remote_syslog][:port] %>
