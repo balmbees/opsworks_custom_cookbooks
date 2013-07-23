@@ -2,7 +2,7 @@
 # Cookbook Name:: rsyslog
 # Recipe:: client
 #
-# Copyright 2009-2013, Opscode, Inc.
+# Copyright 2009, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,30 +19,25 @@
 
 include_recipe "rsyslog"
 
-if !node['rsyslog']['server'] and node['rsyslog']['server_ip'].nil? and Chef::Config[:solo]
-  Chef::Log.fatal("Chef Solo does not support search, therefore it is a requirement of the rsyslog::client recipe that the attribute 'server_ip' is set when using Chef Solo. 'server_ip' is not set.")
-elsif !node['rsyslog']['server']
-  rsyslog_server = node['rsyslog']['server_ip'] ||
-                   search(:node, node['rsyslog']['server_search']).first['ipaddress'] rescue nil
+rsyslog_server = search(:node, "rsyslog_server:true")
 
-  if rsyslog_server.nil?
-    Chef::Application.fatal!("The rsyslog::client recipe was unable to determine the remote syslog server. Checked both the server_ip attribute and search()")
-  end
-
-  template "/etc/rsyslog.d/49-remote.conf" do
-    only_if { node['rsyslog']['remote_logs'] && !rsyslog_server.nil? }
-    source "49-remote.conf.erb"
+unless node[:rsyslog][:server] 
+  template "/etc/rsyslog.d/remote.conf" do
+    source "remote.conf.erb"
     backup false
     variables(
-      :server => rsyslog_server,
-      :protocol => node['rsyslog']['protocol']
+      :server => rsyslog_server.first['fqdn'],
+      :protocol => node[:rsyslog][:protocol]
     )
+    owner "root"
+    group "root"
     mode 0644
-    notifies :restart, "service[#{node['rsyslog']['service_name']}]"
+    notifies :restart, resources(:service => "rsyslog"), :delayed
   end
 
   file "/etc/rsyslog.d/server.conf" do
     action :delete
-    notifies :reload, "service[#{node['rsyslog']['service_name']}]"
+    notifies :reload, resources(:service => "rsyslog"), :delayed
+    only_if do ::File.exists?("/etc/rsyslog.d/server.conf") end
   end
 end

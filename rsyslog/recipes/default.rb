@@ -2,7 +2,7 @@
 # Cookbook Name:: rsyslog
 # Recipe:: default
 #
-# Copyright 2009-2013, Opscode, Inc.
+# Copyright 2009, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,31 +21,41 @@ package "rsyslog" do
   action :install
 end
 
-directory "/etc/rsyslog.d" do
-  mode 0755
-end
-
-directory "/var/spool/rsyslog" do
-  mode 0755
-end
-
-# Our main stub which then does its own rsyslog-specific
-# include of things in /etc/rsyslog.d/*
-template "/etc/rsyslog.conf" do
-  source 'rsyslog.conf.erb'
-  mode 0644
-  variables(:protocol => node['rsyslog']['protocol'])
-  notifies :restart, "service[#{node['rsyslog']['service_name']}]"
-end
-
-template "/etc/rsyslog.d/50-default.conf" do
-  source "50-default.conf.erb"
-  backup false
-  mode 0644
-  notifies :restart, "service[#{node['rsyslog']['service_name']}]"
-end
-
-service node['rsyslog']['service_name'] do
-  supports :restart => true, :reload => true, :status => true
+service "rsyslog" do
+  supports :restart => true, :reload => true
   action [:enable, :start]
+end
+
+cookbook_file "/etc/default/rsyslog" do
+  source "rsyslog.default"
+  owner "root"
+  group "root"
+  mode 0644
+end
+
+directory "/etc/rsyslog.d" do
+  owner "root"
+  group "root"
+  mode 0755
+end
+
+template "/etc/rsyslog.conf" do
+  source "rsyslog.conf.erb"
+  owner "root"
+  group "root"
+  mode 0644
+  notifies :restart, resources(:service => "rsyslog"), :delayed
+end
+
+case node[:platform]
+when "ubuntu"
+  if node[:platform_version].to_f >= 9.10
+    template "/etc/rsyslog.d/50-default.conf" do
+      source "50-default.conf.erb"
+      backup false
+      owner "root"
+      group "root"
+      mode 0644
+    end
+  end
 end
