@@ -6,8 +6,8 @@ $ModLoad imfile
 <%- @watch_files.each_with_index do |wf, idx| %>
 
 # File 1
-$InputFileName <%= wf[:filename] %>
-$InputFileTag <%= wf[:tag] %>
+$InputFileName <%= wf['filename'] %>
+$InputFileTag <%= wf['tag'] %>
 $InputFileStateFile state_file_<%= idx %>
 #$InputFileSeverity error
 #$InputFileFacility local7
