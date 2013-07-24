@@ -52,7 +52,7 @@ default[:papertrail][:hostname_cmd] = ""
 #              [{:filename => "/var/log/myapp.log", :tag => "myapp:"}]
 #
 default[:papertrail][:watch_files] = [
-  {'filename' => "/srv/www/vingle/shared/log/staging.log", 'tag' => "web:rails"},
-  {'filename' => "/srv/www/vingle/shared/log/unicorn.stderr.log", 'tag' => "web:unicorn-error"},
-  {'filename' => "/srv/www/vingle/shared/log/unicorn.stdout.log", 'tag' => "web:unicorn-log"}
+  {'filename' => "/srv/www/vingle/shared/log/staging.log", 'tag' => "rails:"},
+  {'filename' => "/srv/www/vingle/shared/log/unicorn.stderr.log", 'tag' => "unicorn-error:"},
+  {'filename' => "/srv/www/vingle/shared/log/unicorn.stdout.log", 'tag' => "unicorn:"}
 ]
