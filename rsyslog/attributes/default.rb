@@ -17,6 +17,6 @@
 # limitations under the License.
 #
 
-default[:rsyslog][:log_dir] = "/srv/rsyslog"
+default[:rsyslog][:log_dir] = "/srv/www/vingle/shared/log"
 default[:rsyslog][:server] = false
 default[:rsyslog][:protocol] = "tcp"
