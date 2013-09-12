@@ -6,7 +6,7 @@
 # Notifies a "restart Rails app <name>" resource.
 
 define :custom_env_template do
-  template "#{params[:deploy][:deploy_to]}/shared/config/.env" do
+  template "#{params[:deploy][:deploy_to]}/shared/.env" do
     source "env.erb"
     owner params[:deploy][:user]
     group params[:deploy][:group]
@@ -14,6 +14,6 @@ define :custom_env_template do
     variables :env => params[:env]
     notifies :run, resources(:execute => "restart Rails app #{params[:application]}")
 
-    only_if { File.exists?("#{params[:deploy][:deploy_to]}/shared/config") }
+    only_if { File.exists?("#{params[:deploy][:deploy_to]}/shared") }
   end
 end
