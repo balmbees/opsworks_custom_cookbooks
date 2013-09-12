@@ -4,11 +4,9 @@
 include_recipe "rails::configure"
 
 node[:deploy].each do |application, deploy|
-  
-  custom_env_template do
+  dot_env_template do
     application application
     deploy deploy
     env node[:custom_env][application]
   end
-  
 end
