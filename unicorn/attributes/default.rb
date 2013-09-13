@@ -1,4 +1,6 @@
-include_attribute 'rails::rails'
+if node[:web_application_type] != 'sinatra'
+  include_attribute 'rails::rails'
+end
 
 default[:unicorn][:worker_processes] = node[:rails][:max_pool_size] ? node[:rails][:max_pool_size] : 4
 default[:unicorn][:backlog] = 1024
