@@ -51,8 +51,8 @@ default[:papertrail][:hostname_cmd] = ""
 #   node[:papertrail][:watch_files] =
 #              [{:filename => "/var/log/myapp.log", :tag => "myapp:"}]
 #
-default[:papertrail][:watch_files] = [
-  {'filename' => "/srv/www/vingle/shared/log/production.log", 'tag' => "rails:"},
-  {'filename' => "/srv/www/vingle/shared/log/unicorn.stderr.log", 'tag' => "unicorn-error:"},
-  {'filename' => "/srv/www/vingle/shared/log/unicorn.stdout.log", 'tag' => "unicorn:"}
-]
+# default[:papertrail][:watch_files] = [
+#   {'filename' => "/srv/www/vingle/shared/log/production.log", 'tag' => "rails:"},
+#   {'filename' => "/srv/www/vingle/shared/log/unicorn.stderr.log", 'tag' => "unicorn-error:"},
+#   {'filename' => "/srv/www/vingle/shared/log/unicorn.stdout.log", 'tag' => "unicorn:"}
+# ]
