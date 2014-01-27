@@ -22,7 +22,7 @@
 actions :create, :remove
 
 # Make create the default action
-default_action :create
+# default_action :create
 
 # Require attributes
 attribute :path,    :kind_of => String, :name_attribute => true
