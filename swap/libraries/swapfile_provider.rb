@@ -66,7 +66,7 @@ class Chef
         end
 
         def create_swapfile(command)
-          shell_out!(command, :timeout => 300)
+          shell_out!(command, :timeout => 900)
           Chef::Log.info("#{@new_resource} Creating empty file at #{@new_resource.path}")
           Chef::Log.debug("#{@new_resource} Empty file at #{@new_resource.path} created using command '#{command}'")
         end
