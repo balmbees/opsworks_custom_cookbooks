@@ -8,6 +8,7 @@
         dateext
         dateformat <%= node[:logrotate][:dateformat] %>
         <% end -%>
+        create 640 syslog adm
         notifempty
         copytruncate
         sharedscripts
