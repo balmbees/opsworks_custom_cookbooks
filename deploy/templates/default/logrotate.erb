@@ -12,4 +12,7 @@
         notifempty
         copytruncate
         sharedscripts
+        post-rotate
+        (stop rsyslog && rm /var/spool/rsyslog/stat* && start rsyslog 2>&1) || true
+        endscript
 }
