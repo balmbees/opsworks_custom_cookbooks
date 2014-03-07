@@ -1,12 +1,4 @@
-# Set up app's custom configuration in the environment.
-# See https://forums.aws.amazon.com/thread.jspa?threadID=118107
-
-include_recipe "rails::configure"
-
-node[:deploy].each do |application, deploy|
-  dot_env_template do
-    application application
-    deploy deploy
-    env node[:custom_env][application]
-  end
+if node[:opsworks][:instance][:layers].include?('rails-app')
+  include_recipe "dot_env::restart_command"
+  include_recipe "dot_env::write_config"
 end
