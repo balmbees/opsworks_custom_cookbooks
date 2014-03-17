@@ -1,0 +1,5 @@
+#!/bin/sh
+cd /srv/www/vingle/current
+exec 2>&1
+exec chpst -u deploy -usidekiq bundle exec sidekiq -e production -P /var/run/sidekiq/sidekiq.pid
+
