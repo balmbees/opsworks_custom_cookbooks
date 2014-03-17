@@ -4,6 +4,6 @@ runit_service "sidekiq" do
   owner "deploy"
   group "www-data"
   action :restart
-  log false
+  default_logger true
 end
 
