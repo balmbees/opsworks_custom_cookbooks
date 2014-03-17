@@ -1,5 +1,7 @@
 include_recipe 'runit::default'
 
 runit_service "sidekiq" do
-  options(params)
+  owner "deploy"
+  group "www-data"
 end
+

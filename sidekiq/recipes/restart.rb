@@ -1,6 +1,8 @@
-runit_service "sidekiq"
+include_recipe 'runit::default'
 
-service "runit_service[sidekiq]" do
+runit_service "sidekiq" do
+  owner "deploy"
+  group "www-data"
   action :restart
 end
 
