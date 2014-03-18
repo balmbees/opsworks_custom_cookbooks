@@ -1,0 +1,1 @@
+default[:sidekiq][:queue] = "default"
