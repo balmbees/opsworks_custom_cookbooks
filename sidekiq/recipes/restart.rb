@@ -19,7 +19,7 @@ end
 runit_service "sidekiqemail" do
   action :restart
   options({
-    :queue => "email_notification",,
+    :queue => "email_notification",
     :workers_count => node[:sidekiq][:email_workers_count]
   })
 end
@@ -27,7 +27,7 @@ end
 runit_service "sidekiqmobile" do
   action :restart
   options({
-    :queue => "mobile_notification",,
+    :queue => "mobile_notification",
     :workers_count => node[:sidekiq][:mobile_workers_count]
   })
 end

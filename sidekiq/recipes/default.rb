@@ -16,14 +16,14 @@ end
 
 runit_service "sidekiqemail" do
   options({
-    :queue => "email_notification",,
+    :queue => "email_notification",
     :workers_count => node[:sidekiq][:email_workers_count]
   })
 end
 
 runit_service "sidekiqmobile" do
   options({
-    :queue => "mobile_notification",,
+    :queue => "mobile_notification",
     :workers_count => node[:sidekiq][:mobile_workers_count]
   })
 end
