@@ -2,9 +2,9 @@ include_recipe 'runit::default'
 
 def reload_service(service)
   begin
-    execute "reload #{service}" do
-      command "sv force-reload #{service}"
-    end
+    command = Mixlib::ShellOut.new("sv force-reload #{service}")
+    command.run_command
+    command.error!
   rescue Mixlib::ShellOut::ShellCommandFailed
     return false
   end
