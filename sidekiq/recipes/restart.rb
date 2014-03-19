@@ -1,22 +1,54 @@
 include_recipe 'runit::default'
 
-def reload_service(service)
-  begin
-    command = Mixlib::ShellOut.new("sv force-reload #{service}")
-    command.run_command
-    command.error!
-  rescue Mixlib::ShellOut::ShellCommandFailed
-    return false
-  end
-  true
+runit_service "sidekiq" do
+  action :reload
+  options({
+    :queues => ["default", "counter"],
+    :workers_count => node[:sidekiq][:default_workers_count]
+  })
 end
 
-services = ["sidekiq", "sidekiqnewsfeed", "sidekiqemail", "sidekiqmobile"]
-max_retries = 3
-
-services.each do |service|
-  max_retries.times.each do
-    break if reload_service(service)
-    sleep(2)
-  end
+runit_service "sidekiqnewsfeed" do
+  action :reload
+  options({
+    :queues => ["newsfeed"],
+    :workers_count => node[:sidekiq][:newsfeed_workers_count]
+  })
 end
+
+runit_service "sidekiqemail" do
+  action :reload
+  options({
+    :queues => ["email_notification"],
+    :workers_count => node[:sidekiq][:email_workers_count]
+  })
+end
+
+runit_service "sidekiqmobile" do
+  action :reload
+  options({
+    :queues => ["mobile_notification"],
+    :workers_count => node[:sidekiq][:mobile_workers_count]
+  })
+end
+
+# def reload_service(service)
+#   begin
+#     command = Mixlib::ShellOut.new("sv force-reload #{service}")
+#     command.run_command
+#     command.error!
+#   rescue Mixlib::ShellOut::ShellCommandFailed
+#     return false
+#   end
+#   true
+# end
+
+# services = ["sidekiq", "sidekiqnewsfeed", "sidekiqemail", "sidekiqmobile"]
+# max_retries = 3
+
+# services.each do |service|
+#   max_retries.times.each do
+#     break if reload_service(service)
+#     sleep(2)
+#   end
+# end
