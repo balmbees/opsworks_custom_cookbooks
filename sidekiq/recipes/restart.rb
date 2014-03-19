@@ -20,4 +20,3 @@ services.each do |service|
     sleep(2)
   end
 end
-
