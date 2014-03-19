@@ -1,37 +1,21 @@
 include_recipe 'runit::default'
 
-runit_service "sidekiq" do
-  options({
-    :queues => ["default", "counter", "analytics"],
-    :workers_count => node[:sidekiq][:default_workers_count]
-  })
+service "sidekiq" do
   retries 3
   action :reload
 end
 
-runit_service "sidekiqnewsfeed" do
-  options({
-    :queues => ["newsfeed"],
-    :workers_count => node[:sidekiq][:newsfeed_workers_count]
-  })
+service "sidekiqnewsfeed" do
   retries 3
   action :reload
 end
 
-runit_service "sidekiqemail" do
-  options({
-    :queues => ["email_notification"],
-    :workers_count => node[:sidekiq][:email_workers_count]
-  })
+service "sidekiqemail" do
   retries 3
   action :reload
 end
 
-runit_service "sidekiqmobile" do
-  options({
-    :queues => ["mobile_notification"],
-    :workers_count => node[:sidekiq][:mobile_workers_count]
-  })
+service "sidekiqmobile" do
   retries 3
   action :reload
 end
