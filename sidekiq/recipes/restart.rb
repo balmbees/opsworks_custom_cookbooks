@@ -1,34 +1,18 @@
 include_recipe 'runit::default'
 
-runit_service "sidekiq" do
-  action :reload
-  options({
-    :queues => ["default", "counter", "analytics"],
-    :workers_count => node[:sidekiq][:default_workers_count]
-  })
+execute "reload sidekiq" do
+  command "sv force-reload sidekiq"
 end
 
-runit_service "sidekiqnewsfeed" do
-  action :reload
-  options({
-    :queues => ["newsfeed"],
-    :workers_count => node[:sidekiq][:newsfeed_workers_count]
-  })
+execute "reload sidekiqnewsfeed" do
+  command "sv force-reload sidekiqnewsfeed"
 end
 
-runit_service "sidekiqemail" do
-  action :reload
-  options({
-    :queues => ["email_notification"],
-    :workers_count => node[:sidekiq][:email_workers_count]
-  })
+execute "reload sidekiqemail" do
+  command "sv force-reload sidekiqemail"
 end
 
-runit_service "sidekiqmobile" do
-  action :reload
-  options({
-    :queues => ["mobile_notification"],
-    :workers_count => node[:sidekiq][:mobile_workers_count]
-  })
+execute "reload sidekiqmobile" do
+  command "sv force-reload sidekiqmobile"
 end
 
