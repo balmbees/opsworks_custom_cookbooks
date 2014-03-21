@@ -2,7 +2,7 @@ include_recipe 'runit::default'
 
 runit_service "sidekiq" do
   options({
-    :queues => ["default", "counter"],
+    :queues => ["default", "counter", "coverpage"],
     :workers_count => node[:sidekiq][:default_workers_count]
   })
 end
