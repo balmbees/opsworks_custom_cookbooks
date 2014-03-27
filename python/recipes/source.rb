@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-include_recipe "build-essential"
+# include_recipe "build-essential"
 
 configure_options = node['python']['configure_options'].join(" ")
 make_options = node['python']['make_options'].join(" ")
