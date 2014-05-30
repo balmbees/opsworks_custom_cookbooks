@@ -1,6 +1,6 @@
 default[:td_agent][:api_key] = ''
 
-# default[:td_agent][:plugins] = [ { "redshift" => { "package_name" => "fluent-plugin-redshift"} }]
+# default[:td_agent][:plugins] = ["redshift"]
 default[:td_agent][:plugins] = []
 
 default[:td_agent][:includes] = false

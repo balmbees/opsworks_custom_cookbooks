@@ -16,7 +16,8 @@ user 'td-agent' do
   uid      403
   group    'td-agent'
   home     '/var/run/td-agent'
-  shell    '/bin/false'
+  # shell    '/bin/false'
+  shell    "/bin/bash"
   password nil
   supports :manage_home => true
   action   [:create, :manage]
@@ -67,10 +68,6 @@ package "td-agent" do
   action :upgrade
   version node[:td_agent][:version] if node[:td_agent][:pinning_version]
 end
-
-# gem_package "fluent-plugin-redshift" do
-#   version "0.0.4"
-# end
 
 node[:td_agent][:plugins].each do |plugin|
   if plugin.is_a?(Hash)
