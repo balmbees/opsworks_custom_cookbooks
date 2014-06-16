@@ -21,15 +21,16 @@ include conf.d/*.conf
 #   buffer_path /var/log/td-agent/buffer/td
 # </match>
 
+# match vingle.view_counts and dump to redshift
 <match vingle.view_counts>
   type redshift
 
   # s3 (for copying data to redshift)
   aws_key_id <%= @env["AWS_ACCESS_KEY_ID"] %>
   aws_sec_key <%= @env["AWS_SECRET_ACCESS_KEY"] %>
-  s3_bucket vingle-logs
+  s3_bucket vingle-logs/fluent-logs
   s3_endpoint s3.amazonaws.com
-  path fluent-logs
+  path view-counts
   timestamp_key_format %Y/%m/%d/%H/%Y%m%d-%H%M
 
   <% redshift_uri = URI.parse(@env['REDSHIFT_DATABASE_URL']) %>
@@ -44,7 +45,35 @@ include conf.d/*.conf
 
   # buffer
   buffer_type file
-  buffer_path /var/log/td-agent/buffer/td
+  buffer_path /var/log/td-agent/buffer/td/view-counts
+  flush_interval 15m
+</match>
+
+# match vingle.sessions and dump to redshift
+<match vingle.sessions>
+  type redshift
+
+  # s3 (for copying data to redshift)
+  aws_key_id <%= @env["AWS_ACCESS_KEY_ID"] %>
+  aws_sec_key <%= @env["AWS_SECRET_ACCESS_KEY"] %>
+  s3_bucket vingle-logs/fluent-logs
+  s3_endpoint s3.amazonaws.com
+  path sessions
+  timestamp_key_format %Y/%m/%d/%H/%Y%m%d-%H%M
+
+  <% redshift_uri = URI.parse(@env['REDSHIFT_DATABASE_URL']) %>
+  # redshift
+  redshift_host <%= redshift_uri.host %>
+  redshift_port <%= redshift_uri.port %>
+  redshift_dbname <%= redshift_uri.path.gsub("/","") %>
+  redshift_user <%= redshift_uri.user %>
+  redshift_password <%= redshift_uri.password %>
+  redshift_tablename sessions
+  file_type json
+
+  # buffer
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/td/sessions
   flush_interval 15m
 </match>
 
