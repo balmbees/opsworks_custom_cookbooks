@@ -28,7 +28,7 @@ include conf.d/*.conf
   # s3 (for copying data to redshift)
   aws_key_id <%= @env["AWS_ACCESS_KEY_ID"] %>
   aws_sec_key <%= @env["AWS_SECRET_ACCESS_KEY"] %>
-  s3_bucket vingle-logs/fluent-logs
+  s3_bucket vingle-logs/fluent-logs/<%= @env["RAILS_ENV"] %>
   s3_endpoint s3.amazonaws.com
   path view-counts
   timestamp_key_format %Y/%m/%d/%H/%Y%m%d-%H%M
@@ -56,7 +56,7 @@ include conf.d/*.conf
   # s3 (for copying data to redshift)
   aws_key_id <%= @env["AWS_ACCESS_KEY_ID"] %>
   aws_sec_key <%= @env["AWS_SECRET_ACCESS_KEY"] %>
-  s3_bucket vingle-logs/fluent-logs
+  s3_bucket vingle-logs/fluent-logs/<%= @env["RAILS_ENV"] %>
   s3_endpoint s3.amazonaws.com
   path sessions
   timestamp_key_format %Y/%m/%d/%H/%Y%m%d-%H%M
