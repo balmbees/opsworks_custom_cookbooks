@@ -1,4 +1,4 @@
 execute "bower-install" do
-  command "bower install /srv/www/vingle/current"
+  command "bower install --allow-root"
 end
 
