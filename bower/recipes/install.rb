@@ -1,4 +1,4 @@
 execute "bower-install" do
-  command "bower install"
+  command "bower install /srv/www/vingle/current"
 end
 
