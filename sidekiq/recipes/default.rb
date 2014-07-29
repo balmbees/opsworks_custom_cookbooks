@@ -1,5 +1,9 @@
 include_recipe 'runit::default'
 
+apt_package "ttf-vlgothic" do
+  action :install
+end
+
 runit_service "sidekiq" do
   options({
     :queues => ["default", "counter", "coverpage"],
