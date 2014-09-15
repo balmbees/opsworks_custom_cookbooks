@@ -1,4 +1,4 @@
-source 'source "https://supermarket.getchef.com'
+source 'https://supermarket.getchef.com'
 
 cookbook 'java'
 cookbook 'apt', git: 'git://github.com/opscode-cookbooks/apt.git'
