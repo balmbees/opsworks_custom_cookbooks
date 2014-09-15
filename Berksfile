@@ -11,4 +11,4 @@ cookbook 'monit', git: 'git://github.com/apsoto/monit.git'
 
 cookbook 'vim'
 cookbook 'minitest-handler', git: 'git://github.com/btm/minitest-handler-cookbook.git'
-cookbook 'pleaserun', git: 'https://github.com/paulczar/chef-pleaserun.git'
+cookbook 'pleaserun', git: 'git://github.com/paulczar/chef-pleaserun.git'
