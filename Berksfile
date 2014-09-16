@@ -10,6 +10,7 @@ cookbook 'java', git: 'git://github.com/opscode-cookbooks/java.git'
 cookbook 'build-essential'
 cookbook 'git'
 cookbook 'ant'
+cookbook 'logrotate'
 
 cookbook 'monit', git: 'git://github.com/apsoto/monit.git'
 
