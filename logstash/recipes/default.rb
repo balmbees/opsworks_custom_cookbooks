@@ -1,40 +1,61 @@
-name = 'server'
+#
+# Cookbook Name:: chef-logstash
+# Recipe:: default
+#
+# Copyright (C) 2014 Wouter de Vos
+# 
+# License: MIT
+#
 
-Chef::Application.fatal!("attribute hash node['logstash']['instance']['#{name}'] must exist.") if node['logstash']['instance'][name].nil?
+include_recipe "logstash::yumrepo" if platform_family? "rhel", "fedora"
+include_recipe "logstash::apt"     if platform_family? "debian"
 
-execute 'allow java to bind on <1024 ports' do
-  command 'setcap cap_net_bind_service=+ep $(realpath $(which java))'
+directory "/etc/logstash" do
+  owner "logstash"
+  group "logstash"
+  mode "0755"
 end
 
-logstash_instance name do
-  action :create
+directory "/etc/logstash/conf.d" do
+  owner "logstash"
+  group "logstash"
+  mode "0755"
 end
 
-logstash_service name do
-  action [:enable]
+directory "/var/lib/monit" do
+  owner "logstash"
+  group "logstash"
+  mode "0755"
 end
 
-config_variables = node[:logstash][:instance][:default]
-config_variables = config_variables.merge(node[:logstash][:instance][:default][:config_templates_variables])
-if node['logstash']['instance'][name] and node['logstash']['instance'][name][:config_templates_variables]
-  config_variables = config_variables.merge(node['logstash']['instance'][name])
-  config_variables = config_variables.merge(node['logstash']['instance'][name][:config_templates_variables])
+package "logstash"
+
+execute "remove-server-conf" do
+  command %{
+    if [ -e /etc/logstash/conf.d/server.conf ]; then
+      rm /etc/logstash/conf.d/server.conf
+    fi
+  }
+  not_if { node[:logstash][:server][:enabled] }
 end
 
-logstash_config name do
-  variables config_variables
-  action [:create]
+execute "remove-agent-conf" do
+  command %{
+    if [ -e /etc/logstash/conf.d/agent.conf ]; then
+      rm /etc/logstash/conf.d/agent.conf
+    fi
+  }
+  not_if { node[:logstash][:agent][:enabled] }
 end
 
-logstash_plugins 'contrib' do
-  instance name
-  action [:create]
+service "logstash" do
+  supports :restart => true, :reload => false
+  action :nothing
+  provider Chef::Provider::Service::Upstart
 end
 
-logstash_pattern name do
-  action [:create]
-end
+include_recipe "logstash::server" if node[:logstash][:server][:enabled]
+include_recipe "logstash::agent"  if node[:logstash][:agent][:enabled]
 
-logstash_service name do
-  action [:start]
-end
+# Patch the elasticsearch_http plugin.
+include_recipe "logstash::elasticsearch_http" if node[:logstash][:server][:enabled]
