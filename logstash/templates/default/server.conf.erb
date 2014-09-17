@@ -1,34 +1,26 @@
 input {
-  <% if node['logstash']['server']['inputs'].empty? -%>
+<% if @inputs.empty? -%>
   tcp {
     type => "tcp-input"
     port => "5959"
     codec => "json"
   }
-  <% else -%> 
-    <%= LogstashConf.section_to_str(node['logstash']['server']['inputs']) %>
-  <% end -%>
+<% else -%>
+    <%= LogstashConf.section_to_str(@inputs) %>
+<% end -%>
 }
 
-<% unless node['logstash']['server']['filters'].empty? -%>
+<% unless @filters.empty? -%>
 filter {
-  <%= LogstashConf.section_to_str(node['logstash']['server']['filters'], node['logstash']['server']['version'], @patterns_dir) %>
+  <%= LogstashConf.section_to_str(@filters, @version, @patterns_dir) %>
 }
 <% end -%>
 
 output {
-  <% if node['logstash']['server']['debug'] -%>
-  stdout { debug => true }
-  <% end -%>
-  <% if @enable_embedded_es -%>
-  elasticsearch { embedded => true }
-  <% elsif not @es_server_ip.empty? -%>
-  elasticsearch { host => "<%= @es_server_ip %>" cluster => "<%= @es_cluster %>" }
-  <% end -%>
-  <% unless @graphite_server_ip.empty? -%>
-  graphite { host => "<%= @graphite_server_ip %>" metrics => ["logstash.events", "1"] }
-  <% end -%>
-  <% # unless node['logstash']['server']['outputs'].empty? -%>
-    <%= LogstashConf.section_to_str(node['logstash']['server']['outputs']) %>
-  <% # end -%>
+<% if @debug -%>
+    stdout { debug => true }
+<% end -%>
+<% if @outputs { %>
+  <%= LogstashConf.section_to_str(@inputs) %>
+<% end -%>
 }

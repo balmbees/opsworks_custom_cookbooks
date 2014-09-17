@@ -1,9 +1,1 @@
-metadata.json
-.vagrant
 Berksfile.lock
-vendor/
-.kitchen/
-.kitchen.local.yml
-.bundle/
-bin/
-Gemfile.lock
