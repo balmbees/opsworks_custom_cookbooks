@@ -1,23 +1,44 @@
-user <%= node[:nginx][:user] %>;
-worker_processes  <%= node[:nginx][:worker_processes] %>;
-
-error_log  <%= node[:nginx][:log_dir] %>/error.log;
-pid        /var/run/nginx.pid;
+user www-data;
+worker_processes 4;
+pid /run/nginx.pid;
 
 events {
-  worker_connections  <%= node[:nginx][:worker_connections] %>;
+	worker_connections 768;
+	# multi_accept on;
 }
 
 http {
-  access_log	<%= node[:nginx][:log_dir] %>/access.log;
 
-  sendfile on;
-  tcp_nopush on;
-  tcp_nodelay on;
+	##
+	# Basic Settings
+	##
 
-  gzip  on;
-  gzip_types application/javascript application/x-javascript text/css text/xml application/xml;
+	sendfile on;
+	tcp_nopush on;
+	tcp_nodelay on;
+	keepalive_timeout 65;
+	types_hash_max_size 2048;
 
-  include <%= node[:nginx][:dir] %>/conf.d/*.conf;
-  include <%= node[:nginx][:dir] %>/sites-enabled/*;
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+
+	##
+	# Logging Settings
+	##
+
+	access_log <%= node[:nginx][:accesslog] %>;
+	error_log <%= node[:nginx][:errorlog] %>;
+
+	##
+	# Gzip Settings
+	##
+
+	gzip on;
+	gzip_disable "msie6";
+
+	##
+	# Virtual Host Configs
+	##
+
+	include /etc/nginx/conf.d/*.conf;
 }
