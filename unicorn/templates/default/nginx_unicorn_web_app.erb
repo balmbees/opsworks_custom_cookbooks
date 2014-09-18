@@ -13,7 +13,7 @@ server {
       <% end %>
     <% end %>
   <% else %>
-  access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log;
+  access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log.json logstash_json;
   <%end %>
 
   keepalive_timeout 5;
@@ -69,7 +69,7 @@ server {
   listen   443;
   server_name <%= @application[:domains].join(" ") %> <%= node[:hostname] %>;
   access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>-ssl.access.log;
-  
+
   ssl on;
   ssl_certificate /etc/nginx/ssl/<%= @application[:domains].first %>.crt;
   ssl_certificate_key /etc/nginx/ssl/<%= @application[:domains].first %>.key;
