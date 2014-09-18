@@ -1,3 +1,9 @@
 <% node[:elasticsearch][:setting].each_pair do |key,val| %>
-<%= key %> : <%= val %>
+  <% if val.is_a?(Hash) %>
+    <% val.each_pair do |k,v| %>
+      <%= k %> : <%= v %>
+    <% end%>
+  <% else %>
+    <%= key %> : <%= val %>
+  <% end %>
 <% end %>
