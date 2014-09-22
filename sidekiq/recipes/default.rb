@@ -6,7 +6,7 @@ end
 
 runit_service "sidekiq" do
   options({
-    :queues => ["default", "counter", "coverpage"],
+    :queues => ["default", "counter", "coverpage", "research"],
     :workers_count => node[:sidekiq][:default_workers_count]
   })
 end
