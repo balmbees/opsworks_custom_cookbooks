@@ -21,7 +21,7 @@ http {
   log_format logstash_json '{ "@timestamp": "$time_iso8601", '
     '"@fields": { '
     '"remote_addr": "$remote_addr", '
-    '"http_x_forwarded_for": "$http_x_forwarded_for"'
+    '"http_x_forwarded_for": "$http_x_forwarded_for", '
     '"remote_user": "$remote_user", '
     '"body_bytes_sent": "$body_bytes_sent", '
     '"request_time": "$request_time", '
