@@ -20,7 +20,7 @@ http {
 
   log_format logstash_json '{ "@timestamp": "$time_iso8601", '
     '"@fields": { '
-    '"server_name": "$server_name", '
+    '"http_host": "$http_host", '
     '"remote_addr": "$remote_addr", '
     '"http_x_forwarded_for": "$http_x_forwarded_for", '
     '"remote_user": "$remote_user", '
