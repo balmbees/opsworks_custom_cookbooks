@@ -13,7 +13,7 @@ server {
       <% end %>
     <% end %>
   <% else %>
-  access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log logstash_json;
+  access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log.json logstash_json;
   <%end %>
 
   keepalive_timeout 5;
