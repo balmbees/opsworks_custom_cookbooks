@@ -5,7 +5,7 @@ default[:elasticsearch][:setting] = {
   "index.number_of_shards" => "1",
   "index.number_of_replicas" => "0",
   "path.conf" => "/etc/elasticsearch",
-  "path.data" => "/mnt/data",
+  "path.data" => "/elb/data",
   "path.logs" => "/var/log/elasticsearch",
   "script.disable_dynamic" => "false"
 }

@@ -10,7 +10,7 @@ dpkg_package "/tmp/#{filename}" do
   action :install
 end
 
-directory '/mnt/data' do
+directory '/elb/data' do
   owner 'elasticsearch'
   group 'elasticsearch'
   mode '0755'
