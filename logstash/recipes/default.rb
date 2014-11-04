@@ -10,6 +10,11 @@
 include_recipe "logstash::yumrepo" if platform_family? "rhel", "fedora"
 include_recipe "logstash::apt"     if platform_family? "debian"
 
+group "adm" do
+  append true
+  members "logstash"
+end
+
 directory "/etc/logstash" do
   owner "logstash"
   group "logstash"
