@@ -10,3 +10,7 @@ default[:elasticsearch][:setting] = {
   "script.disable_dynamic" => "false",
   "indices.fielddata.cache.size" => "40%"
 }
+
+default[:elasticsearch][:env] = {
+  :es_heap_size => "8g"
+}

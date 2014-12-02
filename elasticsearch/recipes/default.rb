@@ -10,3 +10,4 @@
 include_recipe "#{cookbook_name}::elasticsearch"
 include_recipe "#{cookbook_name}::kibana"
 include_recipe "#{cookbook_name}::nginx"
+include_recipe "#{cookbook_name}::setting"
