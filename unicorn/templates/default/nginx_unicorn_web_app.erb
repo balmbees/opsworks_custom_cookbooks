@@ -43,7 +43,6 @@ server {
       break;
     }
 
-  <% if @env['RAILS_ENV'] == 'staging' -%>
     if ($http_origin ~* (https?:\/\/ci\.balmbees\.net)) {
       set $cors "true";
     }
@@ -65,7 +64,6 @@ server {
       add_header 'Content-Length' 0;
       return 204;
     }
-  <% end -%>
   }
 
   location /nginx_status {
