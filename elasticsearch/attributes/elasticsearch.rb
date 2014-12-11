@@ -1,5 +1,5 @@
-default[:elasticsearch][:deb_url] = "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb"
-default[:elasticsearch][:deb_sha] = "156a38c5a829e5002ae8147c6cac20effe6cd065"
+default[:elasticsearch][:deb_url] = "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.1.deb"
+default[:elasticsearch][:deb_sha] = "4ca792a50cdc1cf6fa2a8aa0ff12394ab1450135"
 
 default[:elasticsearch][:setting] = {
   "index.number_of_shards" => "3",
