@@ -1,8 +1,8 @@
-default['go']['version'] = '1.3'
+default['go']['version'] = '1.4'
 default['go']['platform'] = node['kernel']['machine'] =~ /i.86/ ? '386' : 'amd64'
 default['go']['filename'] = "go#{node['go']['version']}.#{node['os']}-#{node['go']['platform']}.tar.gz"
 default['go']['url'] = "http://golang.org/dl/#{node['go']['filename']}"
-default['go']['install_dir'] = '/usr/local'
+default['go']['install_dir'] = '/opt'
 default['go']['gopath'] = '/opt/go'
 default['go']['gobin'] = '/opt/go/bin'
 default['go']['scm'] = true
