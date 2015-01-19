@@ -13,4 +13,4 @@ script "install_plugin_es" do
   not_if { File.exist?("/usr/share/elasticsearch/plugins/head") }
 end
 
-notifies :restart, 'service[elasticsearch]' unless node.elasticsearch[:skip_restart]
+#notifies :restart, 'service[elasticsearch]' unless node.elasticsearch[:skip_restart]
