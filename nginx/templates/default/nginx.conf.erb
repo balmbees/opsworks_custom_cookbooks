@@ -57,4 +57,9 @@ http {
 
   include <%= node[:nginx][:dir] %>/conf.d/*.conf;
   include <%= node[:nginx][:dir] %>/sites-enabled/*;
+
+  server {
+    error_page 404 http://s0.vingle.net/pages/maintenance.html;
+    error_page 500 http://s0.vingle.net/pages/maintenance.html;
+  }
 }
