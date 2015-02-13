@@ -11,6 +11,7 @@ cookbook 'build-essential'
 cookbook 'git'
 cookbook 'ant'
 cookbook 'logrotate'
+cookbook 'cron'
 
 cookbook 'monit', git: 'git://github.com/apsoto/monit.git'
 
