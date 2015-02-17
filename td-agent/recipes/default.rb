@@ -30,24 +30,6 @@ directory '/etc/td-agent/' do
   action :create
 end
 
-case node['platform']
-when "ubuntu"
-  dist = node['lsb']['codename']
-  source = (dist == 'precise') ? "http://packages.treasure-data.com/precise/" : "http://packages.treasure-data.com/debian/"
-  apt_repository "treasure-data" do
-    uri source
-    distribution dist
-    components ["contrib"]
-    action :add
-  end
-# when "centos", "redhat"
-#   yum_repository "treasure-data" do
-#     url "http://packages.treasure-data.com/redhat/$basearch"
-#     gpgkey "http://packages.treasure-data.com/redhat/RPM-GPG-KEY-td-agent"
-#     action :add
-#   end
-end
-
 template "/etc/td-agent/td-agent.conf" do
   mode "0644"
   source "td-agent.conf.erb"
@@ -60,13 +42,8 @@ if node['td_agent']['includes']
   end
 end
 
-package "td-agent" do
-  options value_for_platform(
-    ["ubuntu", "debian"] => {"default" => "-f --force-yes"},
-    "default" => nil
-    )
-  action :upgrade
-  version node[:td_agent][:version] if node[:td_agent][:pinning_version]
+execute "install td-agent" do
+  command "curl -L http://toolbelt.treasuredata.com/sh/install-ubuntu-precise.sh | sh"
 end
 
 node[:td_agent][:plugins].each do |plugin|
