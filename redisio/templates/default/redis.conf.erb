@@ -118,9 +118,6 @@ databases <%=@databases%>
 <% if (@backuptype == 'rdb' || @backuptype == 'both') %>
 
   <% if @save.nil? %>
-    save 900 1
-    save 300 10
-    save 60 10000
   <% else %>
     <% @save.each_line do |save_option| %>
       <%= "save #{save_option}" %>
