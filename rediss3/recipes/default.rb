@@ -19,7 +19,7 @@ end
 cron_d 's3-cron' do
   minute  "0"
   hour    "1,5,9,13,17,21"
-  command "/usr/local/bin/s3cmd --config /root/.s3cfg put #{node[:rediss3][:rdb_path]}/#{node[:rediss3][:rdb_filename]} s3://#{node[:rediss3][:s3_prefix]}/#{node[:opsworks][:instance][:hostname]}/#{node[:rediss3][:rdb_filename]}_`date \"+\%Y-\%m-\%d-\%H\"`"
+  command "/usr/local/bin/s3cmd --config /root/.s3cfg put #{node[:rediss3][:rdb_path]}/#{node[:rediss3][:rdb_filename]} s3://#{node[:rediss3][:s3_prefix]}/#{node[:opsworks][:instance][:hostname]}/#{node[:rediss3][:rdb_filename]}_`/bin/date \"+\%Y-\%m-\%d-\%H\"`"
   user    "root"
   path    "/usr/local/bin"
 end
