@@ -1,9 +1,5 @@
 include_recipe 'runit::default'
 
-apt_package "fonts-vlgothic" do
-  action :install
-end
-
 runit_service "sidekiq" do
   options({
     :queues => ["default", "counter", "coverpage", "research"],
