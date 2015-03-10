@@ -1,6 +1,6 @@
 include_recipe 'runit::default'
 
-apt_package "ttf-vlgothic" do
+apt_package "fonts-vlgothic" do
   action :install
 end
 
