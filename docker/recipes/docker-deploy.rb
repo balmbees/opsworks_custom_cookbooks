@@ -30,17 +30,18 @@ node[:deploy].each do |application, deploy|
   bash "docker-cleanup" do
     user "root"
     code <<-EOH
-      if docker ps -a | grep #{deploy[:application]};
-      then
-        docker stop #{deploy[:application]}
-        sleep 3
-        docker rm #{deploy[:application]}
-        sleep 3
-      fi
-      if docker images | grep #{deploy[:application]};
-      then
-        docker rmi #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
-      fi
+      # if docker ps -a | grep #{deploy[:application]};
+      # then
+      #   docker stop #{deploy[:application]}
+      #   sleep 3
+      #   docker rm #{deploy[:application]}
+      #   sleep 3
+      # fi
+      # if docker images | grep #{deploy[:application]};
+      # then
+      #   docker rmi #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      # fi
+      docker rm td
     EOH
   end
 
@@ -49,18 +50,20 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      if docker ps -a | grep td_agent;
-      then
-        :
-      else
-        docker pull #{deploy[:application]}/dockerfiles:td_agent
-      fi
-      if docker ps -a | grep logstash;
-      then
-        :
-      else
-        docker pull #{deploy[:application]}/dockerfiles:logstash
-      fi
+      # if docker ps -a | grep td_agent;
+      # then
+      #   :
+      # else
+      #   docker pull #{deploy[:application]}/dockerfiles:td_agent
+      # fi
+      # if docker ps -a | grep logstash;
+      # then
+      #   :
+      # else
+      #   docker pull #{deploy[:application]}/dockerfiles:logstash
+      # fi
+      docker pull #{deploy[:application]}/dockerfiles:td_agent
+      docker pull #{deploy[:application]}/dockerfiles:logstash
       docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
     EOH
   end
@@ -71,8 +74,8 @@ node[:deploy].each do |application, deploy|
   end
 
   Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent")
-  Chef::Log.info("docker run -v /var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
-  Chef::Log.info("docker run #{dockerenvs} -v /var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td --name #{deploy[:application]} -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
+  Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
+  Chef::Log.info("docker run #{dockerenvs} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
@@ -89,7 +92,7 @@ node[:deploy].each do |application, deploy|
       else
         docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
       fi
-      docker run #{dockerenvs} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td --name #{deploy[:application]} -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      docker run #{dockerenvs} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
     EOH
   end
 end
