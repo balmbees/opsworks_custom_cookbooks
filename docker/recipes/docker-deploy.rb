@@ -87,9 +87,9 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run -v /var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+        docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
       fi
-      docker run #{dockerenvs} -v /var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td --name #{deploy[:application]} -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      docker run #{dockerenvs} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td --name #{deploy[:application]} -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
     EOH
   end
 end
