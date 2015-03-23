@@ -1,3 +1,5 @@
+include_recipe "logrotate"
+
 logrotate_app "nginx" do
   rotate 52
   cookbook "logrotate"
