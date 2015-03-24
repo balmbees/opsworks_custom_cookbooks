@@ -41,9 +41,15 @@ node[:deploy].each do |application, deploy|
       # then
       #   docker rmi #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
       # fi
+      if docker ps -a | grep unicorn_rails;
+      then
+        docker rm unicorn_rails
+        sleep 1
+      fi
       if docker ps -a | grep td;
       then
         docker rm td
+        sleep 1
       fi
     EOH
   end
@@ -65,9 +71,9 @@ node[:deploy].each do |application, deploy|
       # else
       #   docker pull #{deploy[:application]}/dockerfiles:logstash
       # fi
-      docker pull #{deploy[:application]}/dockerfiles:td_agent
-      docker pull #{deploy[:application]}/dockerfiles:logstash
-      docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      # docker pull #{deploy[:application]}/dockerfiles:td_agent
+      # docker pull #{deploy[:application]}/dockerfiles:logstash
+      # docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
     EOH
   end
 
@@ -78,26 +84,32 @@ node[:deploy].each do |application, deploy|
 
   Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
-  Chef::Log.info("docker run #{dockerenvs} -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
+  Chef::Log.info("docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      if docker ps | grep td_agent;
-      then
-        :
-      else
-        docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
-      fi
-      if docker ps | grep logstash;
-      then
-        :
-      else
-        sleep 3
-        docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
-      fi
-      sleep 5
-      docker run #{dockerenvs} -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      # if docker ps | grep td_agent;
+      # then
+      #   :
+      # else
+      #   docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
+      # fi
+      # if docker ps | grep logstash;
+      # then
+      #   :
+      # else
+      #   sleep 3
+      #   docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+      # fi
+      docker pull #{deploy[:application]}/dockerfiles:logstash
+      docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+
+      docker pull #{deploy[:application]}/dockerfiles:td_agent
+      docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
+
+      docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
     EOH
   end
 end
