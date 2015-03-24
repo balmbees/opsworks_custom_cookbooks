@@ -78,7 +78,7 @@ node[:deploy].each do |application, deploy|
 
   Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
-  Chef::Log.info("docker run #{dockerenvs} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
+  Chef::Log.info("docker run #{dockerenvs} -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
@@ -97,7 +97,7 @@ node[:deploy].each do |application, deploy|
         docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
       fi
       sleep 2
-      docker run #{dockerenvs} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      docker run #{dockerenvs} -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
     EOH
   end
 end
