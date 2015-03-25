@@ -102,6 +102,9 @@ node[:deploy].each do |application, deploy|
       #   sleep 3
       #   docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
       # fi
+      docker pull #{deploy[:application]}/dockerfiles:newrelic
+      docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic
+
       docker pull #{deploy[:application]}/dockerfiles:logstash
       docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
 
