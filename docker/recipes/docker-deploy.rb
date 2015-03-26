@@ -102,19 +102,20 @@ node[:deploy].each do |application, deploy|
       #   sleep 3
       #   docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
       # fi
-      docker pull #{deploy[:application]}/dockerfiles:newrelic
-      docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic
-
-      docker pull #{deploy[:application]}/dockerfiles:logstash
-      docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
-
       docker pull #{deploy[:application]}/dockerfiles:td_agent
       docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
+      sleep 3
 
-      sleep 5
+      docker pull #{deploy[:application]}/dockerfiles:newrelic
+      docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic
+      sleep 3
 
       docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
       docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      sleep 3
+
+      docker pull #{deploy[:application]}/dockerfiles:logstash
+      docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
     EOH
   end
 end
