@@ -39,8 +39,13 @@ node[:deploy].each do |application, deploy|
       # fi
       # if docker images | grep #{deploy[:application]};
       # then
-      #   docker rmi #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
+      #   docker rmi #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}
       # fi
+      if docker ps | grep unicorn_rails;
+      then
+        docker stop unicorn_rails
+        sleep 3
+      fi
       if docker ps -a | grep unicorn_rails;
       then
         docker rm unicorn_rails
@@ -54,29 +59,6 @@ node[:deploy].each do |application, deploy|
     EOH
   end
 
-  Chef::Log.info("docker pull images")
-  bash "docker pull images" do
-    user "root"
-    cwd "#{deploy[:deploy_to]}"
-    code <<-EOH
-      # if docker ps -a | grep td_agent;
-      # then
-      #   :
-      # else
-      #   docker pull #{deploy[:application]}/dockerfiles:td_agent
-      # fi
-      # if docker ps -a | grep logstash;
-      # then
-      #   :
-      # else
-      #   docker pull #{deploy[:application]}/dockerfiles:logstash
-      # fi
-      # docker pull #{deploy[:application]}/dockerfiles:td_agent
-      # docker pull #{deploy[:application]}/dockerfiles:logstash
-      # docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
-    EOH
-  end
-
   dockerenvs = " "
   node[:custom_env][:vingle].each do |key, value|
     dockerenvs=dockerenvs+" -e \"#{key}=#{value}\""
@@ -84,38 +66,45 @@ node[:deploy].each do |application, deploy|
 
   Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
-  Chef::Log.info("docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}")
+  Chef::Log.info("docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      # if docker ps | grep td_agent;
-      # then
-      #   :
-      # else
-      #   docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
-      # fi
-      # if docker ps | grep logstash;
-      # then
-      #   :
-      # else
-      #   sleep 3
-      #   docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
-      # fi
-      docker pull #{deploy[:application]}/dockerfiles:td_agent
-      docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
-      sleep 3
+      if docker ps | grep td;
+      then
+        :
+      else
+        docker pull #{deploy[:application]}/dockerfiles:td_agent
+        docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
+        sleep 3
+      fi
 
-      docker pull #{deploy[:application]}/dockerfiles:newrelic
-      docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic
-      sleep 3
+      if docker ps | grep newrelic;
+      then
+        :
+      else
+        docker pull #{deploy[:application]}/dockerfiles:newrelic
+        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic
+        sleep 3
+      fi
 
-      docker pull #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
-      docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/balmbees:#{node[:custom_env][:vingle][:RAILS_ENV]}
-      sleep 3
+      if docker ps | grep unicorn_rails;
+      then
+        :
+      else
+        docker pull #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}
+        docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}
+        sleep 3
+      fi
 
-      docker pull #{deploy[:application]}/dockerfiles:logstash
-      docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+      if docker ps | grep logstash;
+      then
+        :
+      else
+        docker pull #{deploy[:application]}/dockerfiles:logstash
+        docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+      fi
     EOH
   end
 end
