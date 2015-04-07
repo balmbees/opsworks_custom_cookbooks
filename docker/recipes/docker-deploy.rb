@@ -64,7 +64,7 @@ node[:deploy].each do |application, deploy|
     dockerenvs=dockerenvs+" -e \"#{key}=#{value}\""
   end
 
-  Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent")
+  Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
   Chef::Log.info("docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}")
   bash "docker-run" do
@@ -75,8 +75,8 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker pull #{deploy[:application]}/dockerfiles:td_agent
-        docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent
+        docker pull #{deploy[:application]}/dockerfiles:td_agent2
+        docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2
         sleep 3
       fi
 
