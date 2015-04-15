@@ -70,7 +70,7 @@ node[:deploy].each do |application, deploy|
 
   # Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
-  Chef::Log.info("docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}")
+  Chef::Log.info("docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
@@ -97,8 +97,8 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker pull #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}
-        docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}
+        docker pull #{node[:docker][:DOCKER_RAILS_REPO]}
+        docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}
         sleep 3
       fi
 
