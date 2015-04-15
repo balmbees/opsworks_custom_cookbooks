@@ -22,7 +22,7 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      docker login -e #{node[:custom_env][:vingle][:DOCKER_EMAIL]} -u #{node[:custom_env][:vingle][:DOCKER_USERNAME]} -p #{node[:custom_env][:vingle][:DOCKER_PASSWORD]}
+      docker login -e #{node[:custom_env][:prerender][:DOCKER_EMAIL]} -u #{node[:custom_env][:prerender][:DOCKER_USERNAME]} -p #{node[:custom_env][:prerender][:DOCKER_PASSWORD]}
     EOH
   end
 
@@ -30,17 +30,6 @@ node[:deploy].each do |application, deploy|
   bash "docker-cleanup" do
     user "root"
     code <<-EOH
-      # if docker ps -a | grep #{deploy[:application]};
-      # then
-      #   docker stop #{deploy[:application]}
-      #   sleep 3
-      #   docker rm #{deploy[:application]}
-      #   sleep 3
-      # fi
-      # if docker images | grep #{deploy[:application]};
-      # then
-      #   docker rmi #{deploy[:application]}/#{node[:custom_env][:vingle][:RAILS_ENV]}
-      # fi
       if docker ps -a | grep prerender;
       then
         docker rm prerender
@@ -50,11 +39,11 @@ node[:deploy].each do |application, deploy|
   end
 
   dockerenvs = " "
-  node[:custom_env][:vingle].each do |key, value|
+  node[:custom_env][:prerender].each do |key, value|
     dockerenvs=dockerenvs+" -e \"#{key}=#{value}\""
   end
 
-  Chef::Log.info("docker run #{dockerenvs} --name prerender -p 3000:3000 -d #{deploy[:application]}/prerender")
+  Chef::Log.info("docker run #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
@@ -63,8 +52,8 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker pull #{deploy[:application]}/prerender
-        docker run #{dockerenvs} --name prerender -p 3000:3000 -d #{deploy[:application]}/prerender
+        docker pull vingle/prerender
+        docker run #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender
       fi
     EOH
   end
