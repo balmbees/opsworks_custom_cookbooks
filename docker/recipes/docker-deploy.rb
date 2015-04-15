@@ -1,3 +1,6 @@
+require 'socket'
+host_ip = Socket::getaddrinfo(Socket.gethostname,"echo",Socket::AF_INET).detect { |item| not item[3].start_with?("127.0") }[3]
+
 include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
@@ -61,8 +64,9 @@ node[:deploy].each do |application, deploy|
 
   dockerenvs = " "
   node[:custom_env][:vingle].each do |key, value|
-    dockerenvs=dockerenvs+" -e \"#{key}=#{value}\""
+    dockerenvs += " -e \"#{key}=#{value}\""
   end
+  dockerenvs += " -e \"TD_AGENT_SERVER=#{host_ip}\""
 
   # Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
