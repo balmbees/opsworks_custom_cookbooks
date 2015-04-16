@@ -1,1 +1,1 @@
-*/30 * * * * root docker run <%= @docker_envs %> --name sitespeed <%= @docker_repo %> >> /var/log/cron.log 2>&1
+*/30 * * * * root docker run <%= @docker_envs %> <%= @docker_repo %> >> /var/log/cron.log 2>&1

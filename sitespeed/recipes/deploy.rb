@@ -21,23 +21,6 @@ node[:deploy].each do |application, deploy|
     EOH
   end
 
-  Chef::Log.info("docker cleanup")
-  bash "docker-cleanup" do
-    user "root"
-    code <<-EOH
-      if docker ps | grep sitespeed;
-      then
-        docker stop sitespeed
-        sleep 3
-      fi
-      if docker ps -a | grep sitespeed;
-      then
-        docker rm sitespeed
-        sleep 1
-      fi
-    EOH
-  end
-
   docker_envs = " "
   node[:sitespeed][:env].each do |key, value|
     docker_envs += " -e \"#{key}=#{value}\""
