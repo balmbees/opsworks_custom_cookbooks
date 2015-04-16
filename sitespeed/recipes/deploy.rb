@@ -59,9 +59,13 @@ node[:deploy].each do |application, deploy|
     EOH
   end
 
-  template "/etc/crontab" do
+  template "/etc/crontab.conf" do
     mode "0644"
-    source "crontab.erb"
+    source "crontab.conf.erb"
     variables docker_envs: docker_envs, docker_repo: node[:sitespeed][:DOCKER_REPO]
+  end
+
+  execute "setup crontab" do
+    command "crontab /etc/crontab.conf"
   end
 end
