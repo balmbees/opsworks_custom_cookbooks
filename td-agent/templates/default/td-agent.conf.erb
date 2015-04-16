@@ -46,7 +46,7 @@ include conf.d/*.conf
   # buffer
   buffer_type file
   buffer_path /var/log/td-agent/buffer/td/view-counts
-  flush_interval 5m
+  flush_interval 10m
 </match>
 
 # match vingle.sessions and dump to redshift
@@ -74,7 +74,7 @@ include conf.d/*.conf
   # buffer
   buffer_type file
   buffer_path /var/log/td-agent/buffer/td/sessions
-  flush_interval 5m
+  flush_interval 10m
 </match>
 
 ## match tag=debug.** and dump to console
