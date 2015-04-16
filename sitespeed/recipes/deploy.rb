@@ -27,7 +27,7 @@ node[:deploy].each do |application, deploy|
   end
   docker_envs += " -e \"REGION=#{node[:opsworks][:instance][:hostname]}\""
 
-  Chef::Log.info("docker run #{docker_envs} --name sitespeed -d #{node[:sitespeed][:DOCKER_REPO]}")
+  Chef::Log.info("docker run #{docker_envs} #{node[:sitespeed][:DOCKER_REPO]}")
   bash "docker-pull" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
