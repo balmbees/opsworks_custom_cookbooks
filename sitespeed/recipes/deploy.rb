@@ -32,13 +32,8 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      if docker ps | grep sitespeed;
-      then
-        :
-      else
-        docker pull #{node[:sitespeed][:DOCKER_REPO]}
-        sleep 3
-      fi
+      docker pull #{node[:sitespeed][:DOCKER_REPO]}
+      sleep 3
     EOH
   end
 
