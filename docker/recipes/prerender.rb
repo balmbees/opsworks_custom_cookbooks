@@ -43,7 +43,7 @@ node[:deploy].each do |application, deploy|
     dockerenvs=dockerenvs+" -e \"#{key}=#{value}\""
   end
 
-  Chef::Log.info("docker run #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender")
+  Chef::Log.info("docker run --restart=always #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender")
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}"
@@ -53,7 +53,7 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker pull vingle/prerender
-        docker run #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender
+        docker run --restart=always #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender
       fi
     EOH
   end
