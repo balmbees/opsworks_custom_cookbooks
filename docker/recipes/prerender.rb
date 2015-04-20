@@ -32,7 +32,7 @@ node[:deploy].each do |application, deploy|
     code <<-EOH
       if docker ps -a | grep prerender;
       then
-        docker rm prerender
+        docker rm -f prerender
         sleep 1
       fi
     EOH
