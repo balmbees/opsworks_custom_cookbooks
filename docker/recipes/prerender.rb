@@ -55,6 +55,15 @@ node[:deploy].each do |application, deploy|
         docker pull vingle/prerender
         docker run --restart=always #{dockerenvs} --name prerender -p 3000:3000 -d vingle/prerender
       fi
+
+      if docker ps | grep newrelic;
+      then
+        :
+      else
+        docker pull vingle/dockerfiles:newrelic
+        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:prerender][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic
+        sleep 3
+      fi
     EOH
   end
 end
