@@ -64,6 +64,7 @@ node[:deploy].each do |application, deploy|
     dockerenvs += " -e \"#{key}=#{value}\""
   end
   dockerenvs += " -e \"TD_AGENT_SERVER=#{node[:opsworks][:instance][:private_ip]}\""
+  dockerenvs += " -e \"UNIX_TIMESTAMP=`date +%s`\""
 
   # Chef::Log.info("docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2")
   Chef::Log.info("docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
