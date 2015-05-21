@@ -13,7 +13,7 @@ logrotate_app "nginx" do
     fi
   EOF
   postrotate <<-EOF
-    [ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
+    sudo docker exec -it unicorn_rails sh -c 'cat /var/run/nginx.pid | xargs kill -USR1'
     rm -rf /var/lib/logstash/.sincedb*
   EOF
 end
