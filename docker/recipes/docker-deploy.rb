@@ -39,11 +39,11 @@ node[:deploy].each do |application, deploy|
         docker rm -f unicorn_rails
         sleep 1
       fi
-      # if docker ps -a | grep td;
-      # then
-      #   docker rm -f td
-      #   sleep 1
-      # fi
+      if docker ps -a | grep logstash;
+      then
+        docker rm -f logstash
+        sleep 1
+      fi
     EOH
   end
 
@@ -91,7 +91,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+        docker run --name logstash -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
       fi
     EOH
   end
