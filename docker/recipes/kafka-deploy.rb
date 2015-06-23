@@ -48,7 +48,7 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker pull vingle/kafka
-        docker run --restart=always #{dockerenvs} --name kafka -p 2181:2181 -p 9092:9092 -e ADVERTISED_HOST=#{node[:opsworks][:instance][:private_ip]} -e ADVERTISED_PORT=9092 -d vingle/kafka"
+        docker run --restart=always #{dockerenvs} --name kafka -p 2181:2181 -p 9092:9092 -e ADVERTISED_HOST=#{node[:opsworks][:instance][:private_ip]} -e ADVERTISED_PORT=9092 -d vingle/kafka
       fi
 
       if docker ps | grep newrelic;
