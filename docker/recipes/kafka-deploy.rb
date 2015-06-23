@@ -17,7 +17,7 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      docker login -e #{node[:custom_env][:COMMON][:DOCKER_EMAIL]} -u #{node[:custom_env][:COMMON][:DOCKER_USERNAME]} -p #{node[:custom_env][:COMMON][:DOCKER_PASSWORD]}
+      docker login -e #{node[:custom_env][:common][:DOCKER_EMAIL]} -u #{node[:custom_env][:common][:DOCKER_USERNAME]} -p #{node[:custom_env][:common][:DOCKER_PASSWORD]}
     EOH
   end
 
@@ -34,7 +34,7 @@ node[:deploy].each do |application, deploy|
   end
 
   dockerenvs = " "
-  node[:custom_env][:COMMON].each do |key, value|
+  node[:custom_env][:kafka].each do |key, value|
     dockerenvs=dockerenvs+" -e \"#{key}=#{value}\""
   end
 
@@ -56,7 +56,7 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker pull vingle/dockerfiles:newrelic
-        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:COMMON][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic
+        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:common][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic
         sleep 3
       fi
     EOH
