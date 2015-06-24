@@ -1,7 +1,7 @@
 case node[:platform]
 when "ubuntu","debian"
   execute "install docker" do
-    command "curl -sSL https://get.docker.com/| sudo sh; echo \"DOCKER_OPTS='-g /mnt/docker/ -p /var/run/docker.pid'\" >> /etc/default/docker"
+    command "curl -sSL https://get.docker.com/| sudo sh; echo \"DOCKER_OPTS='-g /mnt/docker/ -p /var/run/docker.pid'\" >> /etc/default/docker ; service docker restart"
   end
 when 'centos','redhat','fedora','amazon'
   package "docker" do
