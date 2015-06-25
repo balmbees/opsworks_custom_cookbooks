@@ -1,5 +1,5 @@
 <% if node['td_agent']['includes'] %>
-include conf.d/*.conf 
+include conf.d/*.conf
 <% end %>
 <% if node['td_agent']['default_config'] %>
 ####
@@ -102,6 +102,25 @@ include conf.d/*.conf
   # buffer
   buffer_type file
   buffer_path /var/log/td-agent/buffer/td/action-logs
+  flush_interval 10m
+</match>
+
+# match vingle.writing_form_logs and dump to s3
+<match vingle.writing_form_logs>
+  type s3
+
+  # s3
+  aws_key_id <%= @env["AWS_ACCESS_KEY_ID"] %>
+  aws_sec_key <%= @env["AWS_SECRET_ACCESS_KEY"] %>
+  s3_bucket vingle-logs/fluent-logs/<%= @env["RAILS_ENV"] %>
+  s3_region us-east-1
+  path writing_form-logs
+
+  file_type json
+
+  # buffer
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/td/writing_form-logs
   flush_interval 10m
 </match>
 
