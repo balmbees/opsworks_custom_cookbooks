@@ -115,6 +115,7 @@ include conf.d/*.conf
   s3_bucket vingle-logs/fluent-logs/<%= @env["RAILS_ENV"] %>
   s3_region us-east-1
   path writing_form-logs
+  time_slice_format %Y/%m/%d/%H
 
   file_type json
 
