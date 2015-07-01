@@ -41,7 +41,7 @@ services = {
 unless services.nil?
     require 'yaml'
     #hack: Ruby YAML adds !ruby/hash:Chef::Node::ImmutableMash and !ruby/array:Chef::Node::ImmutableArray, lets remove them...
-    services_yml = services.to_yaml(:indentation => 2).gsub("! '#services':", '#services:').gsub('---','').gsub('!ruby/hash:Chef::Node::ImmutableMash','').gsub('!ruby/array:Chef::Node::ImmutableArray','')
+    services_yml = services.to_yaml(:indentation => 2).gsub("! '#services':", '#services:').gsub('\'#services\':', '').gsub('---','').gsub('!ruby/hash:Chef::Node::ImmutableMash','').gsub('!ruby/array:Chef::Node::ImmutableArray','')
 end
 
 #configuration file
