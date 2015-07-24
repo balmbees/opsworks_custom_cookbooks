@@ -73,7 +73,7 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker pull #{deploy[:application]}/dockerfiles:td_agent2
-        docker run --net=host #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2
+        docker run #{dockerenvs} --name td -d #{deploy[:application]}/dockerfiles:td_agent2
         sleep 3
       fi
 
@@ -81,7 +81,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}
+        docker run #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 --link td:td -d #{node[:docker][:DOCKER_RAILS_REPO]}
         sleep 3
       fi
 
