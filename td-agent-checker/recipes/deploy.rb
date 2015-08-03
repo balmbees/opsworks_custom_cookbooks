@@ -1,8 +1,8 @@
 include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
-  cookbook_file "/tmp/td_agent_checker.sh" do
-    source "td_agent_checker.sh"
+  cookbook_file "/tmp/td.sh" do
+    source "td.sh"
     mode 0755
   end
 
