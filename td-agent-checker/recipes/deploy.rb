@@ -1,7 +1,7 @@
 include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
-  cookbook_file "/tmp/td.sh" do
+  template "/tmp/td.sh" do
     source "td.sh"
     mode 0755
   end
