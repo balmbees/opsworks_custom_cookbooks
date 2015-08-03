@@ -26,6 +26,8 @@ end
 
 restore_backup_script = <<-EOH
   FFILENAME=#{node[:rediss3][:rdb_filename]}
+  touch $FFILENAME
+
   FFILESIZE=$(stat -c %s "$FFILENAME")
 
   for HTIME in {21,17,13,9,5,1}
