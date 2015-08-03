@@ -13,6 +13,7 @@ script "install_plugin_es" do
   ./autogen.sh
   ./configure
   make && make install
+  cd ..
 
   bin/plugin -i jdbc -u http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-river-jdbc/1.4.0.8/elasticsearch-river-jdbc-1.4.0.8-plugin.zip
   wget https://jdbc.postgresql.org/download/postgresql-9.3-1103.jdbc41.jar
