@@ -8,7 +8,7 @@ default[:elasticsearch][:setting] = {
   "path.data" => "/elb/data",
   "path.logs" => "/var/log/elasticsearch",
   "script.disable_dynamic" => "false",
-  "indices.fielddata.cache.size" => "40%"
+  "indices.fielddata.cache.size" => "40%",
   "action.disable_delete_all_indices" => "true"
 }
 
