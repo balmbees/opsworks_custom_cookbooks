@@ -39,7 +39,7 @@ bash "restore from backups" do
 
       if [ $FILESIZE -lt #{1024*1024*10} ]
       then
-        /usr/local/bin/s3cmd --config /root/.s3cfg get s3://#{node[:rediss3][:s3_prefix]}/#{node[:opsworks][:instance][:hostname]}/#{node[:rediss3][:rdb_filename]}_#{Date.today.strftime}-$HTIME #{node[:rediss3][:rdb_filename]}
+        /usr/local/bin/s3cmd --config /root/.s3cfg get s3://#{node[:rediss3][:s3_prefix]}/#{node[:opsworks][:instance][:hostname]}/#{node[:rediss3][:rdb_filename]}_#{Date.today.strftime}-$HTIME #{node[:rediss3][:rdb_filename]} --force
       fi
     done
 
@@ -50,7 +50,7 @@ bash "restore from backups" do
 
       if [ $FILESIZE -lt #{1024*1024*10} ]
       then
-        /usr/local/bin/s3cmd --config /root/.s3cfg get s3://#{node[:rediss3][:s3_prefix]}/#{node[:opsworks][:instance][:hostname]}/#{node[:rediss3][:rdb_filename]}_#{Date.today.prev_day.strftime}-$HTIME #{node[:rediss3][:rdb_filename]}
+        /usr/local/bin/s3cmd --config /root/.s3cfg get s3://#{node[:rediss3][:s3_prefix]}/#{node[:opsworks][:instance][:hostname]}/#{node[:rediss3][:rdb_filename]}_#{Date.today.prev_day.strftime}-$HTIME #{node[:rediss3][:rdb_filename]} --force
       fi
     done
 
