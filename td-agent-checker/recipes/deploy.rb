@@ -15,7 +15,7 @@ node[:deploy].each do |application, deploy|
 
   execute "setup crontab" do
     user "ubuntu"
-    command "crontab /etc/crontab.conf"
+    command "crontab -u ubuntu /etc/crontab.conf"
   end
 end
 
