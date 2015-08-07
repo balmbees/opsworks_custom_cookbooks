@@ -49,7 +49,7 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker pull vingle/spark
-        docker run --net=host -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:common][:AWS_SECRET_ACCESS_KEY]} -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:common][:AWS_ACCESS_KEY_ID]} --name spark -e SPARK_MASTER_IP=#{node[:opsworks][:instance][:private_ip]} -e SPARK_LOCAL_HOSTNAME=#{node[:opsworks][:instance][:hostname]} -e HOSTNAME=#{node[:opsworks][:instance][:private_ip]} -d vingle/spark 'cd /usr/local/spark/ ; sbin/start-slave.sh spark://#{node[:custom_env][:spark][:MASTER_IP]}:7077'
+        docker run --net=host -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:common][:AWS_SECRET_ACCESS_KEY]} -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:common][:AWS_ACCESS_KEY_ID]} --name spark -e SPARK_MASTER_IP=#{node[:opsworks][:instance][:private_ip]} -e SPARK_LOCAL_HOSTNAME=#{node[:opsworks][:instance][:private_ip]} -e HOSTNAME=#{node[:opsworks][:instance][:private_ip]} -d vingle/spark 'cd /usr/local/spark/ ; sbin/start-slave.sh spark://#{node[:custom_env][:spark][:MASTER_IP]}:7077'
       fi
 
       if docker ps | grep newrelic;
