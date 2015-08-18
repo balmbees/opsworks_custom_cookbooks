@@ -1,2 +1,3 @@
 depends "logrotate"
+depends "cron"
 
