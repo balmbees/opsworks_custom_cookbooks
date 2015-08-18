@@ -4,7 +4,7 @@ import json
 import datetime
 from pyspark import SparkContext
 
-date_str = datetime.date.today().strftime("%Y-%m-%d")
+date_str = (datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
 if __name__ == "__main__":
   sc = SparkContext(appName="soft_fandom_v2")
