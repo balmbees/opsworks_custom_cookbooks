@@ -14,7 +14,7 @@ template "/spark_app/soft_fandoms.py" do
 end
 
 cron_d "soft_fandoms" do
-  minute "0"
-  hour "11"
+  minute "5"
+  hour "1"
   command "docker exec spark bash -c 'spark-submit --master spark://#{node[:custom_env][:spark][:MASTER_IP]}:7077 --packages org.apache.hadoop:hadoop-aws:2.7.1 --conf spark.akka.frameSize=50 /spark_app/soft_fandoms.py'"
 end
