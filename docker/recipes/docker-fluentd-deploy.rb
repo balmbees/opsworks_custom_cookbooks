@@ -59,7 +59,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run #{dockerenvs} --name td2 -d #{deploy[:application]}/dockerfiles:td_agent2
+        docker run #{dockerenvs} --net=host --name td2 -d #{deploy[:application]}/dockerfiles:td_agent2
         sleep 3
       fi
 
