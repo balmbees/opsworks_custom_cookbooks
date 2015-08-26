@@ -1,6 +1,6 @@
 source 'https://supermarket.getchef.com'
 
-cookbook 'apt', git: 'git://github.com/opscode-cookbooks/apt.git'
+cookbook 'apt', git: 'git://github.com/balmbees/apt.git'
 cookbook 'yum', git: 'git://github.com/opscode-cookbooks/yum.git', ref: 'v2.4.4'
 cookbook 'curl'
 cookbook 'ark',  git: 'git://github.com/opscode-cookbooks/ark.git', ref: '0.2.4'
