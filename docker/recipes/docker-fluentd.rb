@@ -30,8 +30,8 @@ node[:deploy].each do |application, deploy|
   bash "docker-cleanup" do
     user "root"
     code <<-EOH
-      docker pull #{deploy[:application]}/dockerfiles:newrelic
-      docker pull #{deploy[:application]}/dockerfiles:td_agent2
+      docker pull vingle/dockerfiles:newrelic
+      docker pull vingle/dockerfiles:td_agent2
 
       if docker ps -a | grep td2;
       then
@@ -48,8 +48,8 @@ node[:deploy].each do |application, deploy|
   dockerenvs += " -e \"TD_AGENT_SERVER=#{node[:opsworks][:instance][:private_ip]}\""
   dockerenvs += " -e \"UNIX_TIMESTAMP=`date +%s`\""
 
-  Chef::Log.info("docker run #{dockerenvs} --name td2 -d #{deploy[:application]}/dockerfiles:td_agent2")
-  Chef::Log.info("docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic")
+  Chef::Log.info("docker run #{dockerenvs} --name td2 -d vingle/dockerfiles:td_agent2")
+  Chef::Log.info("docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic")
 
   bash "docker-run" do
     user "root"
@@ -59,7 +59,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run #{dockerenvs} --net=host --name td2 -d #{deploy[:application]}/dockerfiles:td_agent2
+        docker run #{dockerenvs} --net=host --name td2 -d vingle/dockerfiles:td_agent2
         sleep 3
       fi
 
@@ -67,7 +67,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic
+        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic
         sleep 3
       fi
     EOH
