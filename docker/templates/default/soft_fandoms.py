@@ -12,7 +12,7 @@ date_str = (datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y-%m-%d
 def split_with_taggings(obj):
   result = []
   for channel_id in obj["data"]["taggings"]:
-    result.append( [(obj["data"]["user_id"], channel_id, obj["data"]["referral_area"] if obj["data"]["referral_area"] is not None else 0, obj["data"]["action"]),1] )
+    result.append( [(obj["data"]["user_id"], channel_id, obj["data"]["language_code"],obj["data"]["referral_area"] if obj["data"]["referral_area"] is not None else 0, obj["data"]["action"]),1] )
   return result
 
 if __name__ == "__main__":
@@ -31,7 +31,7 @@ if __name__ == "__main__":
   result = result.flatMap(split_with_taggings)
   # reduce
   result = result.reduceByKey(lambda a,b: a+b)
-  result = result.map(lambda x: ((date_str,x[0][0],x[0][1],x[0][2]), (x[1] if x[0][3] == "card_impression" else 0, x[1] if x[0][3] == "card_read" else 0)))
+  result = result.map(lambda x: ((date_str,x[0][0],x[0][1],x[0][2],x[0][3]), (x[1] if x[0][4] == "card_impression" else 0, x[1] if x[0][4] == "card_read" else 0)))
   result = result.reduceByKey(lambda a,b: (a[0]+b[0],a[1]+b[1]))
   result = result.map(lambda obj: reduce(lambda x,y: x+y, map(list, obj)))
   result = result.map(lambda _list: "|".join(map(str,_list)))
