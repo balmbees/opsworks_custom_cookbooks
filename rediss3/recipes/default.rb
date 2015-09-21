@@ -11,7 +11,7 @@ include_recipe 'cron'
 cron_d 'redis-cron' do
   minute  "0"
   hour    "0,4,8,12,16,20"
-  command "/usr/local/bin/redis-cli bgsave"
+  command "rm -f #{node[:rediss3][:rdb_path]}/#{node[:rediss3][:rdb_filename]} ; /usr/local/bin/redis-cli bgsave"
   user    "root"
   path    "/usr/local/bin"
 end
