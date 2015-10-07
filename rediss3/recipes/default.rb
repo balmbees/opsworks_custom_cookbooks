@@ -52,14 +52,8 @@ restore_backup_script = <<-EOH
     fi
   done
 
-  SFILENAME=#{node[:rediss3][:rdb_filename]}
-  SFILESIZE=$(stat -c %s "$SFILENAME")
-
-  if [ $SFILESIZE -ne $SFILESIZE ]
-  then
-    service redis6379 stop
-    service redis6379 start
-  fi
+  service redis6379 stop
+  service redis6379 start
 EOH
 
 bash "restore from backups" do
