@@ -2,6 +2,10 @@
 bash "init ecs" do
   user "root"
   code <<-EOH
+    yum install -y ecs-init
+    service docker start
+    start ecs
+
     echo 'ECS_CLUSTER=#{node[:ecs][:cluster]}' >> /etc/ecs/ecs.config
     echo 'ECS_ENGINE_AUTH_TYPE=docker' >> /etc/ecs/ecs.config
     echo 'ECS_ENGINE_AUTH_DATA={"https://index.docker.io/v1/":{"auth":"#{node[:common][:DOCKER_AUTHCODE]}","email":"#{node[:common][:DOCKER_EMAIL]}"}}' >> /etc/ecs/ecs.config
