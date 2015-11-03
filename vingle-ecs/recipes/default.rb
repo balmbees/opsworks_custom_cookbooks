@@ -1,4 +1,3 @@
-
 bash "init ecs" do
   user "root"
   code <<-EOH
@@ -14,6 +13,5 @@ bash "init ecs" do
     yum -y install newrelic-sysmond
     nrsysmond-config --set license_key=#{node[:common][:NEWRELIC_KEY]}
     /etc/init.d/newrelic-sysmond start
-    reboot
   EOH
 end
