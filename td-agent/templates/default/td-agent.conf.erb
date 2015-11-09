@@ -105,6 +105,34 @@ include conf.d/*.conf
   flush_interval 10m
 </match>
 
+# match vingle.email_sends and dump to redshift
+<match vingle.email_sends>
+  type redshift
+
+  # s3 (for copying data to redshift)
+  aws_key_id <%= @env["AWS_ACCESS_KEY_ID"] %>
+  aws_sec_key <%= @env["AWS_SECRET_ACCESS_KEY"] %>
+  s3_bucket vingle-logs/fluent-logs/<%= @env["RAILS_ENV"] %>
+  s3_endpoint s3.amazonaws.com
+  path email-sends
+  timestamp_key_format %Y/%m-%d/%Y%m%d-%H%M-<%= node[:opsworks][:instance][:hostname] %>
+
+  <% redshift_uri = URI.parse(@env['REDSHIFT_DATABASE_URL']) %>
+  # redshift
+  redshift_host <%= redshift_uri.host %>
+  redshift_port <%= redshift_uri.port %>
+  redshift_dbname <%= redshift_uri.path.gsub("/","") %>
+  redshift_user <%= redshift_uri.user %>
+  redshift_password <%= redshift_uri.password %>
+  redshift_tablename email_sends
+  file_type json
+
+  # buffer
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/td/email-sends
+  flush_interval 10m
+</match>
+
 # match vingle.email_actions and dump to redshift
 <match vingle.email_actions>
   type redshift
