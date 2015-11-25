@@ -51,7 +51,7 @@ node[:deploy].each do |application, deploy|
   node[:custom_env][:vingle].each do |key, value|
     dockerenvs += " -e \"#{key}=#{value}\""
   end
-  dockerenvs += " -e \"TD_AGENT_SERVER=#{node[:opsworks][:instance][:private_ip]}\""
+  #dockerenvs += " -e \"TD_AGENT_SERVER=#{node[:opsworks][:instance][:private_ip]}\""
   dockerenvs += " -e \"UNIX_TIMESTAMP=`date +%s`\""
 
   Chef::Log.info("docker run  --name logstash -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:vingle][:AWS_ACCESS_KEY_ID]} -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:vingle][:AWS_SECRET_ACCESS_KEY]} -e RAILS_ENV=#{node[:custom_env][:vingle][:RAILS_ENV]} -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
