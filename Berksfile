@@ -19,7 +19,6 @@ cookbook 'vim'
 cookbook 'minitest-handler', git: 'git://github.com/btm/minitest-handler-cookbook.git'
 cookbook 'pleaserun', git: 'git://github.com/paulczar/chef-pleaserun.git'
 
-cookbook 'logstash', '~> 0.12.0', git: 'git://github.com/lusis/chef-logstash.git'
 cookbook 'opsworks_utils', '~> 0.1.0', git: 'git://github.com/hautelook/chef-opsworks-utils.git'
 
 cookbook "ulimit", ">= 0.1.2"
