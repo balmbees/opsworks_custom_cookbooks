@@ -4,7 +4,7 @@
     <% val.each_pair do |k,v| %>
       <% if v.is_a?(Hash) %>
   <%= k %> :
-        <% val.each_pair do |vk,vv| %>
+        <% v.each_pair do |vk,vv| %>
     <%= vk %> : <%= vv %>
         <% end %>
       <% else %>
