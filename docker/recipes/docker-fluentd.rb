@@ -1,4 +1,3 @@
-include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
   # if node[:opsworks][:instance][:layers].first != deploy[:environment_variables][:layer]
@@ -67,7 +66,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic
+        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /var/run/docker.sock:/var/run/docker.sock -d #{deploy[:application]}/dockerfiles:newrelic
         sleep 3
       fi
     EOH
