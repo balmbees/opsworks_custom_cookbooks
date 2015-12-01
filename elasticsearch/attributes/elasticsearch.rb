@@ -5,11 +5,12 @@ default[:elasticsearch][:setting] = {
   "index.number_of_shards" => "3",
   "index.number_of_replicas" => "0",
   "path.conf" => "/etc/elasticsearch",
-  "path.data" => "/elb/data",
+  "path.data" => "/mnt/data",
   "path.logs" => "/var/log/elasticsearch",
   "script.disable_dynamic" => "false",
   "indices.fielddata.cache.size" => "40%",
-  "action.disable_delete_all_indices" => "true"
+  "action.disable_delete_all_indices" => "true",
+  "node" => { "name" => node[:opsworks][:instance][:hostname] }
 }
 
 default[:elasticsearch][:env] = {
