@@ -10,7 +10,7 @@ dpkg_package "/tmp/#{filename}" do
   action :install
 end
 
-directory '/elb/data' do
+directory "#{node[:elasticsearch][:setting]['path.data']}" do
   owner 'elasticsearch'
   group 'elasticsearch'
   mode '0755'
@@ -18,7 +18,7 @@ directory '/elb/data' do
   action :create
 end
 
-template '/etc/elasticsearch/elasticsearch.yml' do
+template "#{node[:elasticsearch][:setting]['path.conf']}/elasticsearch.yml" do
   source 'elasticsearch.yml.erb'
   owner 'elasticsearch'
   group 'elasticsearch'
