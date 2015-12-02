@@ -57,7 +57,7 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker pull vingle/dockerfiles:newrelic
-        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /var/run/docker.sock:/var/run/docker.sock -d #{deploy[:application]}/dockerfiles:newrelic
+        docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:common][:NEWRELIC_KEY]} -h `hostname` -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /var/run/docker.sock:/var/run/docker.sock -d #{deploy[:application]}/dockerfiles:newrelic
         sleep 3
       fi
     EOH
