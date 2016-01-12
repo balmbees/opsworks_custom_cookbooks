@@ -33,6 +33,7 @@ node[:deploy].each do |application, deploy|
       docker pull #{node[:docker][:DOCKER_RAILS_REPO]}
       docker pull #{deploy[:application]}/dockerfiles:newrelic
       docker pull #{deploy[:application]}/dockerfiles:logstash
+      docker pull #{deploy[:application]}/dockerfiles:td_agent2
 
       if docker ps -a | grep unicorn_rails;
       then
@@ -44,6 +45,11 @@ node[:deploy].each do |application, deploy|
         docker rm -f logstash
         sleep 1
       fi
+      if docker ps -a | grep td;
+      then
+        docker rm -f td
+        sleep 1
+      fi
     EOH
   end
 
@@ -51,7 +57,7 @@ node[:deploy].each do |application, deploy|
   node[:custom_env][:vingle].each do |key, value|
     dockerenvs += " -e \"#{key}=#{value}\""
   end
-  dockerenvs += " -e \"TD_AGENT_SERVER=#{node[:opsworks][:instance][:private_ip]}\""
+  dockerenvs += " -e \"TD_AGENT_SERVER=td\""
   dockerenvs += " -e \"UNIX_TIMESTAMP=`date +%s`\""
 
   dns = node[:custom_env][:vingle][:DNS_IP] || "107.21.109.230"
@@ -69,6 +75,14 @@ node[:deploy].each do |application, deploy|
         :
       else
         docker run -d -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN --name dnsmasq andyshinn/dnsmasq -S /node.consul/#{dns}
+        sleep 3
+      fi
+
+      if docker ps | grep dnsmasq;
+      then
+        :
+      else
+        docker run -d --name td vingle/dockerfiles:td_agent2
         sleep 3
       fi
 
