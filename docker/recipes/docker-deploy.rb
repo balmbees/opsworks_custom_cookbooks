@@ -90,7 +90,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run --dns=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' dnsmasq) #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}
+        docker run --link td2:td2 --dns=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' dnsmasq) #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}
         sleep 3
       fi
 
