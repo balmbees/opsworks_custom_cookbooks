@@ -57,7 +57,7 @@ node[:deploy].each do |application, deploy|
   node[:custom_env][:vingle].each do |key, value|
     dockerenvs += " -e \"#{key}=#{value}\""
   end
-  dockerenvs += " -e \"TD_AGENT_SERVER=td\""
+  dockerenvs += " -e \"TD_AGENT_SERVER=td2\""
   dockerenvs += " -e \"UNIX_TIMESTAMP=`date +%s`\""
 
   dns = node[:custom_env][:vingle][:DNS_IP] || "107.21.109.230"
@@ -78,11 +78,11 @@ node[:deploy].each do |application, deploy|
         sleep 3
       fi
 
-      if docker ps | grep dnsmasq;
+      if docker ps | grep td2;
       then
         :
       else
-        docker run -d --name td vingle/dockerfiles:td_agent2
+        docker run -d --name td2 #{dockerenvs} vingle/dockerfiles:td_agent2
         sleep 3
       fi
 
