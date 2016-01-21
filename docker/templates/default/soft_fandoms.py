@@ -7,6 +7,7 @@ import datetime
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 
+year_str = (datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y")
 date_str = (datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
 def split_with_taggings(obj):
@@ -18,7 +19,7 @@ def split_with_taggings(obj):
 if __name__ == "__main__":
   sc = SparkContext(appName="spark_daily_uc_ctr")
 
-  distFile = sc.textFile("s3n://vingle-logs/fluent-logs/production/soft_fandoms/2015/"+date_str+"/*")
+  distFile = sc.textFile("s3n://vingle-logs/fluent-logs/production/soft_fandoms/"+year_str+"/"+date_str+"/*")
   # read in line
   result = distFile.map(lambda line: line)
   result = result.map(lambda line: json.loads(line))
