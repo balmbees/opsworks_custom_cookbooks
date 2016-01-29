@@ -42,6 +42,7 @@ default['redisio']['package_name'] = package_name
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
+default['redisio']['download_url'] = nil
 default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
