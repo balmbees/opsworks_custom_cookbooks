@@ -1,5 +1,3 @@
-include_recipe 'deploy'
-
 node[:deploy].each do |application, deploy|
   # if node[:opsworks][:instance][:layers].first != deploy[:environment_variables][:layer]
   #   Chef::Log.debug("Skipping deploy::docker application #{application} as it is not deployed to this layer")

@@ -1,3 +1,5 @@
-depends "logrotate"
-depends "cron"
+name 'docker'
+
+depends 'logrotate'
+depends 'cron'
 
