@@ -26,6 +26,16 @@ node[:deploy].each do |application, deploy|
     EOH
   end
 
+  Chef::Log.info('docker cleanup dangling')
+  bash 'docker-cleanup-dangling' do
+    user "root"
+    code <<-EOH
+      docker rm -v `docker ps -a -q -f status=exited` || true # Delete stopped containers
+      docker rmi $(docker images -q -f dangling=true) || true # Delete dangling images
+      docker volume rm $(docker volume ls -q -f dangling=true) || true # Delete dangling volumes
+    EOH
+  end
+
   Chef::Log.info("docker cleanup")
   bash "docker-cleanup" do
     user "root"
