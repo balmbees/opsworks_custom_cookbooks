@@ -45,9 +45,9 @@ node[:deploy].each do |application, deploy|
         docker rm -f logstash
         sleep 1
       fi
-      if docker ps -a | grep td;
+      if docker ps -a | grep td2;
       then
-        docker rm -f td
+        docker rm -f td2
         sleep 1
       fi
     EOH
