@@ -36,10 +36,12 @@ domain = node[:opsworks_route53][:prepend_stack_name] ? "#{subdomain}.#{domain}"
 
 route53_record "create a record" do
   name      "#{node[:opsworks][:instance][:hostname]}.#{domain}"
-  value     node[:opsworks][:instance][:private_ip]
+  value     node[:opsworks][:instance][:ip]
   type      "A"
   ttl       node[:opsworks_route53][:ttl]
   zone_id   z_id
+  aws_access_key_id     node[:route53][:aws_access_key_id]
+  aws_secret_access_key node[:route53][:aws_secret_access_key]
   overwrite true
   action    :create
 end
