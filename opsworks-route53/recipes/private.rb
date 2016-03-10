@@ -33,11 +33,11 @@ domain = node[:opsworks_route53][:domainname]
 subdomain = node[:opsworks][:stack][:name].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '-')
 
 domain = node[:opsworks_route53][:prepend_stack_name] ? "#{subdomain}.#{domain}" : domain
-domain = node[:opsworks_route53][:prepend_public] ? "public.#{domain}" : domain
+domain = node[:opsworks_route53][:prepend_private] ? "private.#{domain}" : domain
 
 route53_record "create a record" do
   name      "#{node[:opsworks][:instance][:hostname]}.#{domain}"
-  value     node[:opsworks][:instance][:ip]
+  value     node[:opsworks][:instance][:private_ip]
   type      "A"
   ttl       node[:opsworks_route53][:ttl]
   zone_id   z_id
