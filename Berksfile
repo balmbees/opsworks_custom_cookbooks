@@ -22,4 +22,4 @@ cookbook 'pleaserun', git: 'git://github.com/paulczar/chef-pleaserun.git'
 cookbook 'opsworks_utils', '~> 0.1.0', git: 'git://github.com/hautelook/chef-opsworks-utils.git'
 
 cookbook "ulimit", ">= 0.1.2"
-cookbook 'route53'
+cookbook 'route53', '0.4.0'
