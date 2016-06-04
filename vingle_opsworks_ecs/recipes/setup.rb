@@ -1,4 +1,5 @@
 
+Chef::Log.info('vingle: Download newrelic')
 execute 'Download newrelic' do
   command ['/usr/bin/docker',
            'pull',
@@ -8,6 +9,7 @@ execute 'Download newrelic' do
   end
 end
 
+Chef::Log.info('vingle: Run newrelic')
 execute 'Run newrelic' do
   command ['/usr/bin/docker',
            'run',
@@ -28,6 +30,7 @@ execute 'Run newrelic' do
   end
 end
 
+Chef::Log.info('vingle: Login dockerhub')
 execute 'Login dockerhub' do
   command ['/usr/bin/docker',
            'login',
@@ -46,6 +49,7 @@ bash "Login dockerhub ecs" do
   EOH
 end
 
+Chef::Log.info("vingle: Stop exsiting the Amazon ECS agent")
 execute "Stop exsiting the Amazon ECS agent" do
   command ["/usr/bin/docker",
            "rm",
@@ -57,6 +61,7 @@ execute "Stop exsiting the Amazon ECS agent" do
   end
 end
 
+Chef::Log.info("vingle: Start the Amazon ECS agent")
 execute "Start the Amazon ECS agent" do
   command ["/usr/bin/docker",
            "run",
