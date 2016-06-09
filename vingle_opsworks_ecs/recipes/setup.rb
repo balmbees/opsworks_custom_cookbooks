@@ -1,5 +1,50 @@
+directory "/etc/ecs" do
+  action :create
+  owner "root"
+  mode 0755
+end
 
-Chef::Log.info('vingle: Download newrelic')
+template "ecs.config" do
+  path "/etc/ecs/ecs.config"
+  source "ecs.config.erb"
+  owner "root"
+  group "root"
+  mode 0644
+end
+
+directory "/var/lib/ecs/data" do
+  action :create
+  owner "root"
+  mode 0755
+  recursive true
+end
+
+directory "/var/log/ecs" do
+  action :create
+  owner "root"
+  mode 0755
+end
+
+group "docker" do
+  action :create
+end
+
+if platform?(*node["vingle_opsworks_ecs"]["supported_platforms"])
+  include_recipe "vingle_opsworks_ecs::setup_#{node["platform"]}"
+else
+  Chef::Application.fatal!("The platform #{node["platform"]} is not support by OpsWorks.")
+end
+
+execute 'Login dockerhub' do
+  command ['/usr/bin/docker',
+           'login',
+           "-e #{node[:custom_env][:vingle][:DOCKER_EMAIL]}",
+           "-u #{node[:custom_env][:vingle][:DOCKER_USERNAME]}",
+           "-p #{node[:custom_env][:vingle][:DOCKER_PASSWORD]}",
+           '"https://index.docker.io/v1/"'].join(' ')
+
+end
+
 execute 'Download newrelic' do
   command ['/usr/bin/docker',
            'pull',
@@ -9,7 +54,6 @@ execute 'Download newrelic' do
   end
 end
 
-Chef::Log.info('vingle: Run newrelic')
 execute 'Run newrelic' do
   command ['/usr/bin/docker',
            'run',
@@ -30,39 +74,7 @@ execute 'Run newrelic' do
   end
 end
 
-Chef::Log.info('vingle: Login dockerhub')
-execute 'Login dockerhub' do
-  command ['/usr/bin/docker',
-           'login',
-           "-e #{node[:custom_env][:vingle][:DOCKER_EMAIL]}",
-           "-u #{node[:custom_env][:vingle][:DOCKER_USERNAME]}",
-           "-p #{node[:custom_env][:vingle][:DOCKER_PASSWORD]}",
-           '"https://index.docker.io/v1/"'].join(' ')
-
-end
-
-bash "Login dockerhub ecs" do
-  user "root"
-  code <<-EOH
-    echo 'ECS_ENGINE_AUTH_TYPE=docker' >> /etc/ecs/ecs.config
-    echo 'ECS_ENGINE_AUTH_DATA={"https://index.docker.io/v1/":{"username":"#{node[:custom_env][:vingle][:DOCKER_USERNAME]}","password":"#{node[:custom_env][:vingle][:DOCKER_PASSWORD]}","email":"#{node[:custom_env][:vingle][:DOCKER_EMAIL]}"}}' >> /etc/ecs/ecs.config
-  EOH
-end
-
-Chef::Log.info("vingle: Stop exsiting the Amazon ECS agent")
-execute "Stop exsiting the Amazon ECS agent" do
-  command ["/usr/bin/docker",
-           "rm",
-           "-f",
-           "ecs-agent"].join(" ")
-
-  only_if do
-    ::File.exist?("/usr/bin/docker") && OpsWorks::ShellOut.shellout("docker ps -a").include?("amazon-ecs-agent")
-  end
-end
-
-Chef::Log.info("vingle: Start the Amazon ECS agent")
-execute "Start the Amazon ECS agent" do
+execute "Install the Amazon ECS agent" do
   command ["/usr/bin/docker",
            "run",
            "--name ecs-agent",
@@ -84,5 +96,7 @@ ruby_block "Check that the ECS agent is running" do
     ecs_agent = OpsWorks::ECSAgent.new
 
     Chef::Application.fatal!("ECS agent could not start.") unless ecs_agent.wait_for_availability
+
+    Chef::Application.fatal!("ECS agent is registered to a different cluster.") unless ecs_agent.cluster == node["vingle_opsworks_ecs"]["ecs_cluster_name"]
   end
 end
