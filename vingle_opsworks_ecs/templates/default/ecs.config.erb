@@ -3,4 +3,4 @@ ECS_LOGLEVEL=<%= node["vingle_opsworks_ecs"]["ecs-agent"]["loglevel"] %>
 ECS_DATADIR=/data
 ECS_CLUSTER=<%= node["vingle_opsworks_ecs"]["ecs_cluster_name"] %>
 ECS_ENGINE_AUTH_TYPE=docker
-ECS_ENGINE_AUTH_DATA={"https://index.docker.io/v1/":{"username":"<%= node["custom_env"]["vingle"]["DOCKER_USERNAME"] %>","password":"<%= node["custom_env"]["vingle"]["DOCKER_PASSWORD"] %>","email":"<%= node["custom_env"]["vingle"]["DOCKER_EMAIL"] %>"}} %>
+ECS_ENGINE_AUTH_DATA={"https://index.docker.io/v1/":{"username":"<%= node["custom_env"]["vingle"]["DOCKER_USERNAME"] %>","password":"<%= node["custom_env"]["vingle"]["DOCKER_PASSWORD"] %>","email":"<%= node["custom_env"]["vingle"]["DOCKER_EMAIL"] %>"}}
