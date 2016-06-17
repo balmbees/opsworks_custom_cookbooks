@@ -60,9 +60,6 @@ node[:deploy].each do |application, deploy|
   dockerenvs += " -e \"TD_AGENT_SERVER=td2\""
   dockerenvs += " -e \"UNIX_TIMESTAMP=`date +%s`\""
 
-  dns = node[:custom_env][:vingle][:DNS_IP] || "107.21.109.230"
-
-  Chef::Log.info("docker run -d -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN --name dnsmasq andyshinn/dnsmasq -S /node.consul/#{dns}")
   Chef::Log.info("docker run  --name logstash -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:vingle][:AWS_ACCESS_KEY_ID]} -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:vingle][:AWS_SECRET_ACCESS_KEY]} -e RAILS_ENV=#{node[:custom_env][:vingle][:RAILS_ENV]} -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
   Chef::Log.info("docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic")
   Chef::Log.info("docker run#{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}")
@@ -70,14 +67,6 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}"
     code <<-EOH
-      if docker ps | grep dnsmasq;
-      then
-        :
-      else
-        docker run -d -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN --name dnsmasq andyshinn/dnsmasq -S /node.consul/#{dns}
-        sleep 3
-      fi
-
       if docker ps | grep td2;
       then
         :
@@ -90,7 +79,7 @@ node[:deploy].each do |application, deploy|
       then
         :
       else
-        docker run --link td2:td2 --dns=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' dnsmasq) #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}
+        docker run --link td2:td2 #{dockerenvs} --name unicorn_rails -h #{node[:opsworks][:instance][:hostname]} -v /mnt/var/log/nginx:/var/log/nginx -p 80:80 -p 8080:8080 -d #{node[:docker][:DOCKER_RAILS_REPO]}
         sleep 3
       fi
 
