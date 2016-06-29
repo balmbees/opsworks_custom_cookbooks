@@ -4,14 +4,14 @@ script "install_plugin_es" do
   cwd "/usr/share/elasticsearch/"
 
   if node[:elasticsearch][:version].to_f >= 2.0
-    code_plugins <<-EOH
+    code_plugins = <<-EOH
       bin/plugin install analysis-icu
       bin/plugin install analysis-smartcn
       bin/plugin install analysis-kuromoji
       bin/plugin install cloud-aws
     EOH
   else
-    code_plugins <<-EOH
+    code_plugins = <<-EOH
       bin/plugin -i elasticsearch/elasticsearch-analysis-icu/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-icu']}
       bin/plugin -i elasticsearch/elasticsearch-analysis-smartcn/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-smartcn']}
       bin/plugin -i elasticsearch/elasticsearch-analysis-kuromoji/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-kuromoji']}
