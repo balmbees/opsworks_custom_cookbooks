@@ -22,9 +22,10 @@ script "install_plugin_es" do
   make && make install
   cd ..
 
-  bin/plugin -i jdbc -u http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-river-jdbc/1.4.4.5/elasticsearch-river-jdbc-1.4.4.5-plugin.zip
+  wget http://xbib.org/repository/org/xbib/elasticsearch/importer/elasticsearch-jdbc/#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}/elasticsearch-jdbc-#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}-dist.zip
+  unzip elasticsearch-jdbc-#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}-dist.zip
+  cd elasticsearch-jdbc-#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}/lib
   wget https://jdbc.postgresql.org/download/#{node[:elasticsearch][:plugin]['pg-jdbc-driver']}
-  mv #{node[:elasticsearch][:plugin]['pg-jdbc-driver']} /usr/share/elasticsearch/plugins/jdbc/
   EOH
   not_if { File.exist?("/usr/share/elasticsearch/plugins/head") }
 end
