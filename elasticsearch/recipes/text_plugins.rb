@@ -24,8 +24,6 @@ script "install_plugin_es" do
 
   wget http://xbib.org/repository/org/xbib/elasticsearch/importer/elasticsearch-jdbc/#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}/elasticsearch-jdbc-#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}-dist.zip
   unzip elasticsearch-jdbc-#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}-dist.zip
-  cd elasticsearch-jdbc-#{node[:elasticsearch][:plugin]['elasticsearch-jdbc']}/lib
-  wget https://jdbc.postgresql.org/download/#{node[:elasticsearch][:plugin]['pg-jdbc-driver']}
   EOH
   not_if { File.exist?("/usr/share/elasticsearch/plugins/head") }
 end
