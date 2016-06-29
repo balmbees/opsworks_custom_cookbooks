@@ -3,14 +3,26 @@ script "install_plugin_es" do
   user "root"
   cwd "/usr/share/elasticsearch/"
 
-  # only compatible until 1.5.0 : must rewrite after 1.5.2
+  if node[:elasticsearch][:version].to_f >= 2.0
+    code_plugins <<-EOH
+      bin/plugin install analysis-icu
+      bin/plugin install analysis-smartcn
+      bin/plugin install analysis-kuromoji
+      bin/plugin install cloud-aws
+    EOH
+  else
+    code_plugins <<-EOH
+      bin/plugin -i elasticsearch/elasticsearch-analysis-icu/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-icu']}
+      bin/plugin -i elasticsearch/elasticsearch-analysis-smartcn/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-smartcn']}
+      bin/plugin -i elasticsearch/elasticsearch-analysis-kuromoji/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-kuromoji']}
+      bin/plugin -i elasticsearch/elasticsearch-cloud-aws/#{node[:elasticsearch][:plugin]['elasticsearch-cloud-aws']}
+    EOH
+  end
+
   code <<-EOH
   bin/plugin -i mobz/elasticsearch-head
 
-  bin/plugin -i elasticsearch/elasticsearch-analysis-icu/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-icu']}
-  bin/plugin -i elasticsearch/elasticsearch-analysis-smartcn/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-smartcn']}
-  bin/plugin -i elasticsearch/elasticsearch-analysis-kuromoji/#{node[:elasticsearch][:plugin]['elasticsearch-analysis-kuromoji']}
-  bin/plugin -i elasticsearch/elasticsearch-cloud-aws/#{node[:elasticsearch][:plugin]['elasticsearch-cloud-aws']}
+  #{code_plugins}
 
   bin/plugin -i analysis-mecab-ko-0.16.3 -u https://bitbucket.org/eunjeon/mecab-ko-lucene-analyzer/downloads/elasticsearch-analysis-mecab-ko-0.16.3.zip
 

@@ -1,5 +1,6 @@
 default[:elasticsearch][:deb_url] = "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.3.deb"
 default[:elasticsearch][:deb_sha] = "6335601147c0bbbdcd780cade8e2b3040a0795bb"
+default[:elasticsearch][:version] = "1.7.3"
 
 default[:elasticsearch][:setting] = {
   "index.number_of_shards" => "3",
