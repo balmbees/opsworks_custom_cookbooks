@@ -8,7 +8,6 @@ default[:elasticsearch][:setting] = {
   "path.conf" => "/etc/elasticsearch",
   "path.data" => "/mnt/data",
   "path.logs" => "/var/log/elasticsearch",
-  "script.disable_dynamic" => "false",
   "indices.fielddata.cache.size" => "40%",
   "action.disable_delete_all_indices" => "true",
   "node" => { "name" => node[:opsworks][:instance][:hostname] }
