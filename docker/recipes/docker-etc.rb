@@ -2,9 +2,9 @@ Chef::Log.info("docker cleanup")
 bash "docker-cleanup" do
   user "root"
   code <<-EOH
-    docker pull #{deploy[:application]}/dockerfiles:newrelic
-    docker pull #{deploy[:application]}/dockerfiles:logstash
-    docker pull #{deploy[:application]}/dockerfiles:td_agent2
+    docker pull vingle/dockerfiles:newrelic
+    docker pull vingle/dockerfiles:logstash
+    docker pull vingle/dockerfiles:td_agent2
 
     if docker ps -a | grep logstash;
     then
@@ -29,11 +29,10 @@ node[:custom_env][:vingle].each do |key, value|
   dockerenvs += " -e \"#{key}=#{value}\""
 end
 
-Chef::Log.info("docker run  --name logstash -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:vingle][:AWS_ACCESS_KEY_ID]} -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:vingle][:AWS_SECRET_ACCESS_KEY]} -e RAILS_ENV=#{node[:custom_env][:vingle][:RAILS_ENV]} -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash")
-Chef::Log.info("docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d #{deploy[:application]}/dockerfiles:newrelic")
+Chef::Log.info("docker run  --name logstash -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:vingle][:AWS_ACCESS_KEY_ID]} -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:vingle][:AWS_SECRET_ACCESS_KEY]} -e RAILS_ENV=#{node[:custom_env][:vingle][:RAILS_ENV]} -v /mnt/var/log/nginx:/var/log/nginx -d vingle/dockerfiles:logstash")
+Chef::Log.info("docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -d vingle/dockerfiles:newrelic")
 bash "docker-run" do
   user "root"
-  cwd "#{deploy[:deploy_to]}"
   code <<-EOH
     if docker ps | grep td2;
     then
@@ -46,7 +45,7 @@ bash "docker-run" do
     then
       :
     else
-      docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /var/run/docker.sock:/var/run/docker.sock -d #{deploy[:application]}/dockerfiles:newrelic
+      docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle][:NEWRELIC_KEY]} -h `hostname` -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /var/run/docker.sock:/var/run/docker.sock -d vingle/dockerfiles:newrelic
       sleep 3
     fi
 
@@ -54,7 +53,7 @@ bash "docker-run" do
     then
       :
     else
-      docker run --name logstash -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:vingle][:AWS_ACCESS_KEY_ID]} -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:vingle][:AWS_SECRET_ACCESS_KEY]} -e RAILS_ENV=#{node[:custom_env][:vingle][:RAILS_ENV]} -v /mnt/var/log/nginx:/var/log/nginx -d #{deploy[:application]}/dockerfiles:logstash
+      docker run --name logstash -e AWS_ACCESS_KEY_ID=#{node[:custom_env][:vingle][:AWS_ACCESS_KEY_ID]} -e AWS_SECRET_ACCESS_KEY=#{node[:custom_env][:vingle][:AWS_SECRET_ACCESS_KEY]} -e RAILS_ENV=#{node[:custom_env][:vingle][:RAILS_ENV]} -v /mnt/var/log/nginx:/var/log/nginx -d vingle/dockerfiles:logstash
       sleep 3
     fi
   EOH
