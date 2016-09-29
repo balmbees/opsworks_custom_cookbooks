@@ -6,36 +6,18 @@ service "ecs" do
   only_if { platform?("amazon") }
 end
 
-execute "Stop ECS agent" do
-  command "docker stop $(docker ps -a | grep amazon-ecs-agent | awk '{print $1}')"
+execute "Stop all containers" do
+  command "docker stop --time=30 $(docker ps -a -q)"
 
   only_if do
-    ::File.exist?("/usr/bin/docker") && OpsWorks::ShellOut.shellout("docker ps -a").include?("amazon-ecs-agent")
+    ::File.exist?("/usr/bin/docker") && OpsWorks::ShellOut.shellout("docker ps -a")
   end
 end
 
-execute "Remove ECS agent" do
-  command "docker rm $(docker ps -a | grep amazon-ecs-agent | awk '{print $1}')"
+execute "Remove all containers" do
+  command "docker rm $(docker ps -a -q)"
 
   only_if do
-    ::File.exist?("/usr/bin/docker") && OpsWorks::ShellOut.shellout("docker ps -a").include?("amazon-ecs-agent")
-  end
-end
-
-# ====
-
-execute 'Stop newrelic' do
-  command "docker stop $(docker ps -a | grep nrsysmond | awk '{print $1}')"
-
-  only_if do
-    ::File.exist?('/usr/bin/docker') && OpsWorks::ShellOut.shellout('docker ps -a').include?('nrsysmond')
-  end
-end
-
-execute 'Remove newrelic' do
-  command "docker rm $(docker ps -a | grep nrsysmond | awk '{print $1}')"
-
-  only_if do
-    ::File.exist?('/usr/bin/docker') && OpsWorks::ShellOut.shellout('docker ps -a').include?('nrsysmond')
+    ::File.exist?("/usr/bin/docker") && OpsWorks::ShellOut.shellout("docker ps -a")
   end
 end
