@@ -7,7 +7,7 @@ cookbook 'ark',  git: 'git://github.com/opscode-cookbooks/ark.git', ref: '0.2.4'
 cookbook 'java', git: 'git://github.com/opscode-cookbooks/java.git'
 
 
-cookbook 'build-essential'
+cookbook 'build-essential', '~> 3.0'
 cookbook 'git'
 cookbook 'ant'
 cookbook 'logrotate'
