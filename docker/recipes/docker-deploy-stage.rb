@@ -1,4 +1,4 @@
-include_recipe 'deploy-stage'
+include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
 
