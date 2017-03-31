@@ -38,7 +38,7 @@ bash "docker-run" do
     then
       :
     else
-      docker run -d --name td2 #{dockerenvs} vingle/dockerfiles:td_agent2
+      docker run -d --name td2  -p 127.0.0.1:24224:24224 #{dockerenvs} vingle/dockerfiles:td_agent2
       sleep 3
     fi
     if docker ps | grep newrelic;
