@@ -81,7 +81,7 @@ execute "Clean up previous ECS agent container" do
            "ecs-agent"].join(" ")
 
   only_if do
-    ::File.exist?("/usr/bin/docker") && !OpsWorks::ShellOut.shellout("docker ps -a").include?("amazon-ecs-agent")
+    ::File.exist?("/usr/bin/docker") && OpsWorks::ShellOut.shellout("docker ps -a").include?("amazon-ecs-agent")
   end
 end
 
