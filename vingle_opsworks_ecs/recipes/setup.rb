@@ -74,11 +74,28 @@ execute 'Run newrelic' do
   end
 end
 
-execute "Install the Amazon ECS agent" do
+execute "Clean up previous ECS agent container" do
+  command ["/usr/bin/docker",
+           "rm",
+           "-f",
+           "ecs-agent"].join(" ")
+
+  only_if do
+    ::File.exist?("/usr/bin/docker") && !OpsWorks::ShellOut.shellout("docker ps -a").include?("amazon-ecs-agent")
+  end
+end
+
+execute "Update AWS ECS agent to latest version" do
   command ["/usr/bin/docker",
            "pull",
            "amazon/amazon-ecs-agent:latest"].join(" ")
 
+  only_if do
+    ::File.exist?("/usr/bin/docker")
+  end
+end
+
+execute "Install the Amazon ECS agent" do
   command ["/usr/bin/docker",
            "run",
            "--name ecs-agent",
