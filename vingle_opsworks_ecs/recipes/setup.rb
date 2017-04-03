@@ -76,6 +76,10 @@ end
 
 execute "Install the Amazon ECS agent" do
   command ["/usr/bin/docker",
+           "pull",
+           "amazon/amazon-ecs-agent:latest"].join(" ")
+
+  command ["/usr/bin/docker",
            "run",
            "--name ecs-agent",
            "-d",
