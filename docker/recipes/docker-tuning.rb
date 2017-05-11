@@ -28,8 +28,8 @@ bash "tweak-kernal-params" do
       printf '\n\n====> Increasing outbound backlog queue length...\n'
       ulimit -Hn 65535
       ulimit -Sn 65535
-      sysctl -w net.core.somaxconn="1024"
-      sysctl -w net.ipv4.tcp_max_syn_backlog="1024"
+      sysctl -w net.core.somaxconn="4096"
+      sysctl -w net.ipv4.tcp_max_syn_backlog="4096"
       
       # Increase local port range
       printf '\n\n====> Increasing local port range....\n'
