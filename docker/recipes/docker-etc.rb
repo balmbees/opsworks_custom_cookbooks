@@ -4,7 +4,6 @@ bash "docker-cleanup" do
   code <<-EOH
     docker pull vingle/dockerfiles:newrelic
     docker pull vingle/dockerfiles:logstash
-    docker pull vingle/dockerfiles:td_agent2
 
     if docker ps -a | grep logstash;
     then
@@ -14,11 +13,6 @@ bash "docker-cleanup" do
     if docker ps -a | grep newrelic;
     then
       docker rm -f newrelic
-      sleep 1
-    fi
-    if docker ps -a | grep td2;
-    then
-      docker rm -f td2
       sleep 1
     fi
   EOH
@@ -34,13 +28,6 @@ Chef::Log.info("docker run -e NEW_RELIC_LICENSE_KEY=#{node[:custom_env][:vingle]
 bash "docker-run" do
   user "root"
   code <<-EOH
-    if docker ps | grep td2;
-    then
-      :
-    else
-      docker run -d --name td2  -p 127.0.0.1:24224:24224 #{dockerenvs} vingle/dockerfiles:td_agent2
-      sleep 3
-    fi
     if docker ps | grep newrelic;
     then
       :
